@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build a Mini-GPT from Scratch — Molin</title>
+  <style>
+    /* ==========================================
+           HUASHU DESIGN SYSTEM: LIGHT MODE KEYNOTE
+           ========================================== */
+    :root {
+      --bg-color: #fafdff;
+      /* 极浅冷调空气蓝，比死白更有高级感 */
+      --text-color: #0c0d0e;
+      /* 极深石墨黑 */
+      --accent-color: #0052cc;
+      /* 工业克莱因蓝 */
+      --meta-color: #6b7280;
+      /* 哑光中灰 */
+      --border-color: #e5e7eb;
+      /* 浅色分界线 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 16:9 黄金演讲画布标准容器 */
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 8% 10%;
+      position: relative;
+      background: var(--bg-color);
+    }
+
+    /* 封面专有样式 */
+    .slide.title-slide {
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .brand-tag {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      /* 宽字距，营造顶级发布会呼吸感 */
+      color: var(--accent-color);
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 4.2rem;
+      /* 微调字号，确保大标题完美舒展 */
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      /* 紧凑字距，带来极强的视觉凝聚力 */
+      margin-bottom: 1.5rem;
+      max-width: 900px;
+      color: var(--text-color);
+    }
+
+    h2.subtitle {
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--meta-color);
+      /* 将小标题字距拉宽，并转换为大写，使其在视觉上具备延伸感，压得住大标题 */
+      letter-spacing: 0.15em;
+      margin-bottom: 6rem;
+      max-width: 850px;
+    }
+
+    /* 工业风三栏底线网格排版 */
+    .meta-info {
+      display: grid;
+      grid-template-columns: 2.5fr 3.5fr 4fr;
+      /* 黄金比例分栏 */
+      font-size: 0.9rem;
+      color: var(--meta-color);
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+      width: 100%;
+    }
+
+    .meta-item strong {
+      color: #111111;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    .meta-item span {
+      color: var(--meta-color);
+      font-weight: 400;
+    }
+
+    /* 强调高亮 Molin 的名字 */
+    .meta-item .highlight {
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    .speaker-notes {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="slide title-slide">
+    <div class="brand-tag">Technical Session / AZPE</div>
+
+    <h1>Build a Mini-GPT<br>from Scratch</h1>
+    <h2 class="subtitle">Understanding Transformer Architecture & Mechanics</h2>
+
+    <div class="meta-info">
+      <div class="meta-item">
+        <strong>Speaker</strong>
+        <span class="highlight">Molin (莫林)</span>
+      </div>
+      <div class="meta-item">
+        <strong>Team</strong>
+        <span>ECP CIS</span>
+      </div>
+      <div class="meta-item">
+        <strong>Reference</strong>
+        Andrej Karpathy (microGPT / Let's Build GPT)
+      </div>
+    </div>
+
+    <div class="speaker-notes" data-slide="1">
+      Good evening, team. Tonight we're stripping away the commercial wrapper of modern LLMs. We are going to build
+      "Mini-GPT" from the ground up. No black-box frameworks, no heavy abstractions—just pure mathematical mechanics. We
+      will dissect how intelligence emerges from raw matrix alignment. Let's look inside the glass box.
+    </div>
+  </section>
+
+</body>
+
+</html>
