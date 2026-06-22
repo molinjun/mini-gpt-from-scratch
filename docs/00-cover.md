@@ -7,9 +7,9 @@ Establish the theme in one sentence: build a Mini-GPT that generates English nam
 ## Key Points
 
 - Title: Build a Mini-GPT from Scratch
-- Subtitle: Understand GPT and Transformer mechanics through 3k English names
+- Subtitle: Understanding Transformer architecture and mechanics.
 - Speaker: Molin
-- Session: Technical Session / AZPE
+- Team: Infra . ECP .CIS
 
 ## Speaker Notes
 
@@ -17,7 +17,7 @@ Today we start from a tiny name generator rather than the product surface of Cha
 
 ## Visual Idea
 
-Use the current dark blueprint style: title on the left, and a compact character-to-name-generation flow on the right.
+Use the current dark blueprint style: title on the left, and Figure 1 from "Attention Is All You Need" on the right with attribution.
 
 ## Code Anchor
 
