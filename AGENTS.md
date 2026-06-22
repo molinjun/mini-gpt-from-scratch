@@ -5,8 +5,10 @@
 This repository is an educational Mini-GPT implementation with a companion teaching deck.
 
 - `src/` contains the core Python source: model code in `model.py`, tokenization in `tokenizer.py`, and training/demo flow in `train.py`.
-- `docs/` contains minibook chapters (`01-tokenizer.md` through `06-optimizer.md`). Keep chapter names numbered so reading order remains obvious.
-- `share/slides/` contains the browser-based presentation deck: `index.html`, `app.js`, and `style.css`.
+- `docs/` contains the single talk-ordered content source (`00-cover.md` through `11-thank-you.md`). Keep chapter names numbered so reading order remains obvious.
+- `docs/` is the single talk-ordered source for the presentation deck. Keep all slide-visible text and speaker notes in English, and avoid recreating separate implementation-note chapters.
+- `share/deck/` contains the baoyu slide asset workspace: compiled source, outline, reproducible prompts, generated PNG visuals, and QA screenshots.
+- `share/slides/` contains the final browser-based presentation deck. It is currently a single-file deck at `index.html`.
 - `data/` is reserved for local datasets and token streams. Avoid committing large generated datasets.
 - `assets/` is for diagrams and reusable visuals.
 
@@ -23,7 +25,7 @@ No package manager, test runner, or build system is currently checked in. Use li
 
 Use clear, direct Python with NumPy as the expected numerical dependency. Prefer 4-space indentation, `snake_case` for functions and variables, `PascalCase` for classes, and small functions that map to transformer concepts explained in `docs/`.
 
-For HTML/CSS/JS in `share/slides/`, use semantic sections, descriptive class names, and consistent 2-space indentation.
+For HTML/CSS/JS in `share/slides/`, use semantic sections, descriptive class names, and consistent 2-space indentation. Preserve the current single-file deck unless there is a clear reason to split files.
 
 ## Testing Guidelines
 
@@ -36,3 +38,17 @@ This repository currently has no commit history, so use simple, imperative commi
 ## Agent-Specific Instructions
 
 Keep changes small and aligned with the educational goal. Do not introduce heavyweight frameworks unless the repository direction changes. Preserve the pure-Python/NumPy learning path and update `docs/` alongside source changes when behavior or terminology changes.
+
+## Slide Deck Continuation Instructions
+
+The deck goal is an English-only technical presentation titled **Build a Mini-GPT from Scratch**. It teaches GPT and Transformer mechanics through a tiny character-level name generator trained on roughly 3k English names.
+
+- Use `docs/` as the source of truth for slide outline, key points, speaker notes, and visual plans. Do not recreate a separate `docs/talk/` tree.
+- Use `baoyu-slide-deck` for slide image planning and prompt workflow. Save every final image prompt under `share/deck/prompts/` before generating images.
+- Use Codex `imagegen` for raster image generation when a project-bound diagram or visual asset is needed, then copy the selected image into `share/deck/`.
+- Keep generated images as visual aids. Keep titles, bullets, equations, formulas, and code in HTML for crisp rendering.
+- Follow the `06 / Attention` slide visual language across the entire deck: dark blueprint background, navy grid, cyan/electric-blue accents, high-contrast text, technical diagram styling, and 8px-or-less rounded panels. Do not reintroduce light keynote-style slides.
+- Reuse the existing generated PNG style in `share/deck/`: `01-slide-training-flow.png`, `02-slide-tokenizer-comparison.png`, `03-slide-transformer-overview-v2.png`, and `04-slide-attention-mechanism.png`.
+- All slide-visible content and speaker notes must be English only. Do not introduce Chinese text into `share/slides/index.html`, `docs/`, or new generated-image prompts.
+- The talk explains the target teaching version with `RMSNorm` + `ReLU`. The current source still uses `LayerNorm` + `GELU`; call this out when relevant rather than silently mixing the two versions.
+- After slide edits, verify with a browser check when possible: slide count, keyboard navigation, presenter view, image loading, and no viewport overflow at desktop/presenter sizes.
