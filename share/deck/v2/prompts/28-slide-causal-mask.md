@@ -23,7 +23,7 @@ Speaker-note intent, for context only:
 During training, the full sequence is available, but GPT should not look at future tokens. A causal mask blocks future positions, so each token only learns from the past.
 
 Visual direction:
-Attention matrix with upper triangle blocked out.
+Attention matrix for character positions `d e n n`, with the upper triangle blocked out. Show that each position can only attend to itself and earlier character tokens.
 
 Code snippet intent:
 PyTorch teaching snippet: `scores = scores.masked_fill(mask == 0, -inf)`.
@@ -37,7 +37,9 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 - Keep all slide-visible text and speaker notes in English.
 - Use simple, common English words for speaker notes.
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - Every technical concept slide should include a short definition chip when the term may be new.
 - Use concise definition chips, for example:
@@ -71,7 +73,7 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 ## Pilot Decisions
 
-- QKV examples should use `I love CIS`.
+- QKV examples should use character tokens from `Dennis`, especially `d e n n` with `i` as the likely next token.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.

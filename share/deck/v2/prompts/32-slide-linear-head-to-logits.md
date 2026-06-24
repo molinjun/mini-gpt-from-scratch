@@ -23,7 +23,7 @@ Speaker-note intent, for context only:
 At the end, a linear head maps the hidden vector back to vocabulary size. The output numbers are logits, which are raw scores before softmax. Softmax turns logits into probabilities, and sampling picks the next token.
 
 Visual direction:
-Hidden vector entering linear head, raw logit bars for character tokens, then softmax probability bars. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
+Hidden vector for the last `n` entering the linear head, raw logit bars for character tokens `a`, `e`, `i`, `n`, `s`, then softmax probability bars. Highlight `i` as the likely next token. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
 
 Code snippet intent:
 PyTorch teaching snippet: `logits = self.lm_head(x)`.
@@ -37,7 +37,9 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 - Keep all slide-visible text and speaker notes in English.
 - Use simple, common English words for speaker notes.
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - Every technical concept slide should include a short definition chip when the term may be new.
 - Use concise definition chips, for example:
@@ -71,7 +73,7 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 ## Pilot Decisions
 
-- QKV examples should use `I love CIS`.
+- QKV examples should use character tokens from `Dennis`, especially `d e n n` with `i` as the likely next token.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.

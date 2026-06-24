@@ -9,7 +9,9 @@ Implementation stance: use PyTorch-style snippets for teaching clarity in slides
 Visual style: dark blueprint, navy grid, cyan/electric-blue lines, crisp technical panels, short readable text, no decorative clutter.
 
 Generation rules:
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - For the character tokenizer, keep token IDs small and realistic: `vocab_size = 27`, IDs in the `0..26` range.
 - Add short concept definition chips on technical slides, for example `logits = raw scores`, `gradient = direction to reduce loss`, and `softmax = scores to probabilities`.
@@ -50,7 +52,7 @@ Speaker notes:
 Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we cover the neural network basics we need for training. Third, we turn text into token IDs and vectors. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel may show `I love CIS` token boxes, but should not show arbitrary numeric token IDs.
+Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
 
 Code snippet intent:
 None.
@@ -323,7 +325,7 @@ Speaker notes:
 Large GPT systems use tokenizers that split text into subwords. For Mini-GPT, we use character-level tokens. It is much smaller, but the idea is the same: text becomes token IDs.
 
 Visual direction:
-Two-column comparison: production tokenizer vs character tokenizer. Use `I love CIS` as example.
+Two-column comparison: production tokenizer vs character tokenizer. Use `Dennis` as the example: production tokenizer may use a larger word/subword token, while Mini-GPT splits it into `d e n n i s`.
 
 Code snippet intent:
 Optional teaching mention: `tiktoken` for checking real tokenizer behavior, but no dependency in this deck.
@@ -451,13 +453,13 @@ Speaker notes:
 Self-attention processes positions in parallel. Without position information, order is unclear. So we add a learned position vector to each token vector.
 
 Visual direction:
-Token embedding row plus position embedding row equals hidden vector row.
+Character token row `d e n n` plus position row `0 1 2 3` equals hidden vector row. Include a small contrast row `n n e d` to show that the same characters in a different order get different position vectors.
 
 Code snippet intent:
 PyTorch teaching snippet: `x = tok_emb(idx) + pos_emb(pos)`.
 
 Review note:
-用 “I love CIS” vs “CIS love I” 这类熟悉例子说明顺序，不要引入陌生句子。
+这里也使用 Dennis 字符级例子，避免和 Mini-GPT 的 character tokenizer 冲突。
 
 ## 22. The Hidden Stream
 
@@ -493,7 +495,7 @@ Speaker notes:
 Now we enter the Transformer block. The block has two main jobs. Attention lets tokens look at other tokens. The MLP refines each position. Residual connections keep the signal moving.
 
 Visual direction:
-Section divider with one Transformer block exploded into Attention, MLP, Norm, and Residual paths.
+Section divider with one Transformer block exploded into Attention, MLP, Norm, and Residual paths. Show the running character context `d e n n` entering the block and a likely next token `i` after the block path.
 
 Code snippet intent:
 None.
@@ -514,7 +516,7 @@ Speaker notes:
 Mini-GPT uses a decoder-only Transformer. We repeat the same block several times. After the blocks, a linear head maps each hidden vector to logits over the vocabulary.
 
 Visual direction:
-Full architecture map: token IDs, embeddings, repeated blocks, final norm, linear head, logits.
+Full architecture map: `d e n n` -> small token IDs `[4, 5, 14, 14]` -> embeddings -> repeated decoder-only blocks -> final norm -> linear head -> logits for next character, with `i` highlighted.
 
 Code snippet intent:
 PyTorch class skeleton only if space allows: `token_embedding`, `position_embedding`, `blocks`, `lm_head`.
@@ -535,7 +537,7 @@ Speaker notes:
 Attention is a way for each position to look back at the context. Some earlier tokens matter more than others. The output is a weighted mix of useful information.
 
 Visual direction:
-Current token looking backward with weighted blue lines to earlier tokens.
+Current character token `n` in the context `d e n n` looking backward with weighted blue lines to earlier character tokens `d`, `e`, and `n`. Add a definition chip: "attention = weighted mixing".
 
 Code snippet intent:
 None.
@@ -553,10 +555,10 @@ Slide-visible bullets:
 - Value carries information to mix
 
 Speaker notes:
-Q, K, and V are three learned projections of the same hidden vector. Use the familiar phrase `I love CIS`. When the current token is `CIS`, its Query asks what information it needs. The Keys describe the context tokens `I` and `love`. The Values carry the information that will be mixed.
+Q, K, and V are three learned projections of the same hidden vector. In our Mini-GPT, the tokens are characters. For the context `d e n n`, the last `n` makes a Query. The Keys describe `d`, `e`, `n`, and `n`. The Values carry the information that will be mixed before predicting `i`.
 
 Visual direction:
-Three-panel diagram using the exact tokens `I love CIS`. Highlight current token `CIS`. Show Query from `CIS` matching Keys from `I`, `love`, and `CIS`, then Values carrying information into a mixed vector. Add a definition chip: "Q/K/V = learned projections". Use only project-specific sample text.
+Three-panel diagram using the exact character tokens `d e n n`. Highlight the current token, the last `n`. Show Query from that `n` matching Keys from `d`, `e`, `n`, and `n`, then Values carrying information into a mixed vector for next-token prediction. Add definition chips: "Q/K/V = learned projections" and "tokens are characters here".
 
 Code snippet intent:
 PyTorch teaching snippet: `q, k, v = self.q(x), self.k(x), self.v(x)`.
@@ -577,7 +579,7 @@ Speaker notes:
 We compare queries with keys using a dot product. This gives attention scores, which mean match strength. We scale the scores, then softmax turns them into weights that add up to one. Those weights decide how much value information to mix.
 
 Visual direction:
-Matrix multiplication view: `Q @ K.T`, scale, softmax, attention matrix. Add definition chips: "score = match strength" and "softmax = scores to weights".
+Matrix multiplication view over the character context `d e n n`: `Q @ K.T`, scale, softmax, attention matrix. Add definition chips: "score = match strength" and "softmax = scores to weights".
 
 Code snippet intent:
 PyTorch teaching snippet: `scores = q @ k.transpose(-2, -1) / sqrt(d_k)`.
@@ -598,7 +600,7 @@ Speaker notes:
 During training, the full sequence is available, but GPT should not look at future tokens. A causal mask blocks future positions, so each token only learns from the past.
 
 Visual direction:
-Attention matrix with upper triangle blocked out.
+Attention matrix for character positions `d e n n`, with the upper triangle blocked out. Show that each position can only attend to itself and earlier character tokens.
 
 Code snippet intent:
 PyTorch teaching snippet: `scores = scores.masked_fill(mask == 0, -inf)`.
@@ -619,7 +621,7 @@ Speaker notes:
 One attention head can learn one kind of relation. Multi-head attention runs several heads in parallel. Then the outputs are joined and projected back to the model size.
 
 Visual direction:
-Several parallel attention heads merging into one output vector.
+Several parallel attention heads over the same character context `d e n n`, with different highlighted relation patterns, merging into one output vector.
 
 Code snippet intent:
 None, or a shape-only note if needed.
@@ -640,7 +642,7 @@ Speaker notes:
 Residual connections add the input back to the output of a layer. This helps information and gradients flow. RMSNorm keeps the hidden stream stable as it passes through many operations.
 
 Visual direction:
-Block diagram with main path and skip path, plus RMSNorm gate.
+Block diagram with main path and skip path, plus RMSNorm gate. Label the stream as character hidden vectors for `d e n n`.
 
 Code snippet intent:
 Teaching snippet: `x = x + attention(norm(x))`.
@@ -661,7 +663,7 @@ Speaker notes:
 Attention shares information across positions. The MLP then processes each position separately. In this teaching project, the MLP is Linear, ReLU, and Linear.
 
 Visual direction:
-Per-position MLP pipeline repeated under several token columns.
+Per-position MLP pipeline repeated under character token columns `d`, `e`, `n`, `n`. Show that the MLP does not mix positions; attention already did that.
 
 Code snippet intent:
 PyTorch teaching snippet: `nn.Sequential(nn.Linear(n, 4*n), nn.ReLU(), nn.Linear(4*n, n))`.
@@ -682,7 +684,7 @@ Speaker notes:
 At the end, a linear head maps the hidden vector back to vocabulary size. The output numbers are logits, which are raw scores before softmax. Softmax turns logits into probabilities, and sampling picks the next token.
 
 Visual direction:
-Hidden vector entering linear head, raw logit bars for character tokens, then softmax probability bars. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
+Hidden vector for the last `n` entering the linear head, raw logit bars for character tokens `a`, `e`, `i`, `n`, `s`, then softmax probability bars. Highlight `i` as the likely next token. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
 
 Code snippet intent:
 PyTorch teaching snippet: `logits = self.lm_head(x)`.

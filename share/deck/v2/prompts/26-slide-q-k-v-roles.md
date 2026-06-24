@@ -20,10 +20,10 @@ Slide-visible text to render:
 - Value carries information to mix
 
 Speaker-note intent, for context only:
-Q, K, and V are three learned projections of the same hidden vector. Use the familiar phrase `I love CIS`. When the current token is `CIS`, its Query asks what information it needs. The Keys describe the context tokens `I` and `love`. The Values carry the information that will be mixed.
+Q, K, and V are three learned projections of the same hidden vector. In our Mini-GPT, the tokens are characters. For the context `d e n n`, the last `n` makes a Query. The Keys describe `d`, `e`, `n`, and `n`. The Values carry the information that will be mixed before predicting `i`.
 
 Visual direction:
-Three-panel diagram using the exact tokens `I love CIS`. Highlight current token `CIS`. Show Query from `CIS` matching Keys from `I`, `love`, and `CIS`, then Values carrying information into a mixed vector. Add a definition chip: "Q/K/V = learned projections". Use only project-specific sample text.
+Three-panel diagram using the exact character tokens `d e n n`. Highlight the current token, the last `n`. Show Query from that `n` matching Keys from `d`, `e`, `n`, and `n`, then Values carrying information into a mixed vector for next-token prediction. Add definition chips: "Q/K/V = learned projections" and "tokens are characters here".
 
 Code snippet intent:
 PyTorch teaching snippet: `q, k, v = self.q(x), self.k(x), self.v(x)`.
@@ -37,7 +37,9 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 - Keep all slide-visible text and speaker notes in English.
 - Use simple, common English words for speaker notes.
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - Every technical concept slide should include a short definition chip when the term may be new.
 - Use concise definition chips, for example:
@@ -71,7 +73,7 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 ## Pilot Decisions
 
-- QKV examples should use `I love CIS`.
+- QKV examples should use character tokens from `Dennis`, especially `d e n n` with `i` as the likely next token.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.

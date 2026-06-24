@@ -23,7 +23,7 @@ Speaker-note intent, for context only:
 Self-attention processes positions in parallel. Without position information, order is unclear. So we add a learned position vector to each token vector.
 
 Visual direction:
-Token embedding row plus position embedding row equals hidden vector row.
+Character token row `d e n n` plus position row `0 1 2 3` equals hidden vector row. Include a small contrast row `n n e d` to show that the same characters in a different order get different position vectors.
 
 Code snippet intent:
 PyTorch teaching snippet: `x = tok_emb(idx) + pos_emb(pos)`.
@@ -37,7 +37,9 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 - Keep all slide-visible text and speaker notes in English.
 - Use simple, common English words for speaker notes.
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - Every technical concept slide should include a short definition chip when the term may be new.
 - Use concise definition chips, for example:
@@ -71,7 +73,7 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 ## Pilot Decisions
 
-- QKV examples should use `I love CIS`.
+- QKV examples should use character tokens from `Dennis`, especially `d e n n` with `i` as the likely next token.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.

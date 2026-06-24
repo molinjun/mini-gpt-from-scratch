@@ -20,6 +20,8 @@ Review focus:
 
 ## Batch 2: Neural Network Basics
 
+Status: Generated in `share/deck/v2/` and included in `share/deck/v2/index.html`.
+
 Slides:
 - 05 Neural Network Basics
 - 06 A Neural Network Is a Function
@@ -36,6 +38,8 @@ Review focus:
 - Each slide clearly connects back to training parameters.
 
 ## Batch 3: Tokenizer and Embedding
+
+Status: Generated in `share/deck/v2/` and included in `share/deck/v2/index.html`.
 
 Slides:
 - 12 From Text to Token IDs
@@ -103,4 +107,3 @@ Review focus:
 - Regenerate any weak slide before promotion.
 - Promote approved PNGs, prompts, docs, HTML, and PPTX together.
 - Run deck sync checks only after formal promotion.
-

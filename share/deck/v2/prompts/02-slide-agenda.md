@@ -25,7 +25,7 @@ Speaker-note intent, for context only:
 Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we cover the neural network basics we need for training. Third, we turn text into token IDs and vectors. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel may show `I love CIS` token boxes, but should not show arbitrary numeric token IDs.
+Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
 
 Code snippet intent:
 None.
@@ -39,7 +39,9 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 - Keep all slide-visible text and speaker notes in English.
 - Use simple, common English words for speaker notes.
-- Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
+- Prefer familiar running examples: `ECP CIS` and `Dennis`.
+- Use `Dennis` as the main model example. Transformer slides should use character-level tokens such as `d e n n -> i`.
+- Use `ECP CIS` only as a team/context label, not as the main model token sequence.
 - Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - Every technical concept slide should include a short definition chip when the term may be new.
 - Use concise definition chips, for example:
@@ -73,7 +75,7 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 
 ## Pilot Decisions
 
-- QKV examples should use `I love CIS`.
+- QKV examples should use character tokens from `Dennis`, especially `d e n n` with `i` as the likely next token.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
