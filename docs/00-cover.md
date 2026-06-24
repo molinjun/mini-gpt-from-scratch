@@ -1,32 +1,23 @@
-# 00 Build a Mini-GPT from scratch
+# 01 Build a Mini-GPT from Scratch
 
-## Slide Goal
+## Section
 
-Open the talk with a simple title page and set the topic.
+Opening
 
-## Key Points
+## Slide-Visible Text
 
-- Build a Mini-GPT from scratch
 - Understand Transformer architecture and how it works
-- Speaker: Molin
-- Team: ECP CIS
+- Build a tiny name generator
+- Speaker: Zhiqiang Ge, ECP CIS
 
 ## Speaker Notes
 
-Hello everyone. I am Molin from ECP CIS.
+Hello everyone. I am Zhiqiang Ge from ECP CIS. Today we will build a Mini-GPT from scratch. The goal is not to build a huge production model. The goal is to understand the Transformer architecture by building a small model that we can inspect step by step.
 
-Today we will talk about how to build a Mini-GPT from scratch.
+## Visual Direction
 
-The goal is simple: use a small model to understand the Transformer architecture and how it works.
+Simple cover. Left side title, subtitle, speaker, and team. Render `Understand Transformer Architecture and How It Works` as a subtitle, not as a bullet list. Right side a compact token flow: `ECP CIS` -> `next token` -> `Awesome`.
 
-Let's get started.
+## Target Image
 
-## Visual Idea
-
-A clean dark-blueprint cover with the title, subtitle, speaker, team, and a small Transformer flow diagram: tokens, a compact block stack, and next-token output.
-
-## Code Anchor
-
-- src/tokenizer.py
-- src/model.py
-- src/train.py
+`share/deck/v2/01-slide-build-a-mini-gpt-from-scratch.png`

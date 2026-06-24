@@ -1,40 +1,59 @@
 # Mini-GPT Talk Source
 
-This directory is the single talk-ordered source for the presentation deck. The current deck has 32 slides and follows Andrej Karpathy's MicroGPT style: start small, inspect everything, and explain GPT with a character-level name generator.
+This directory is the single talk-ordered source for the presentation deck.
+
+Current deck: **Build a Mini-GPT from Scratch**
+
+Slides: 42
+
+Rules:
+
+- Keep slide-visible text and speaker notes in English.
+- Keep the dark blueprint visual language used in `share/deck/v2/`.
+- Use the tiny character-level name generator as the running example.
+- The teaching implementation explains RMSNorm + ReLU.
 
 ## Talk Order
 
-1. [Build a Mini-GPT from scratch](00-cover.md): Open the talk with a simple title page and set the topic.
-2. [Transformer Is the Foundation](01-transformer-next-token.md): Set the technical context: Transformer is the main architecture behind many modern AI models, and GPT-style models predict the next token.
-3. [Why MicroGPT](02-why-build-microgpt.md): Introduce the learning project: use a tiny MicroGPT-style name generator so the Transformer ideas become concrete.
-4. [A Neural Network Is a Function](03-function-view.md): Start from the simplest mental model of a neural network.
-5. [One Neuron](04-single-neuron.md): Explain weighted sum and activation with a small example.
-6. [From Neuron to MLP](05-mlp-stack.md): Show how many neurons become a small network.
-7. [Prediction and Loss](06-prediction-loss.md): Connect scores to probability and loss.
-8. [Backprop and Update](07-backprop-update.md): Explain how training changes parameters.
-9. [Names as Tiny Documents](08-name-data.md): Show the MicroGPT name-data framing.
-10. [The Next-Token Task](09-next-token-task.md): Show shifted input and target windows.
-11. [What a Tokenizer Does](10-tokenizer-idea.md): Define tokenizer as the boundary from text to ids.
-12. [Tokenizer Example: I love CIS](11-tiktoken-example.md): Compare subword tokenization to character tokenization.
-13. [Character Tokenizer: Dennis](12-char-tokenizer-dennis.md): Make the project tokenizer fully concrete.
-14. [Token IDs Are Not Meaning](13-ids-are-not-meaning.md): Prevent the common misunderstanding that ids contain meaning.
-15. [Token Embedding](14-token-embedding.md): Show embedding lookup as table selection.
-16. [Position Embedding](15-position-embedding.md): Explain why order must be added.
-17. [The Hidden Stream](16-hidden-stream.md): Introduce the vector stream that moves through the model.
-18. [MicroGPT Decoder-Only Map](17-decoder-only-map.md): Show the full MicroGPT path.
-19. [Inside One Transformer Block](18-block-map.md): Show the two main jobs inside a block.
-20. [Attention Intuition](19-attention-intuition.md): Explain attention before formulas.
-21. [Q, K, V Roles](20-qkv-roles.md): Explain query, key, and value with simple words.
-22. [Attention Scores](21-attention-scores.md): Show dot product, mask, and softmax as a sequence.
-23. [QKV Animation Plan](22-qkv-animation-plan.md): Describe the animation/video sequence requested for QKV.
-24. [Causal Mask](23-causal-mask.md): Explain why GPT cannot look right during training.
-25. [Multi-Head Attention](24-multi-head.md): Explain why multiple heads are useful.
-26. [RMSNorm and Residuals](25-rmsnorm-residual.md): Explain stability pieces in simple terms.
-27. [The MLP Inside the Block](26-mlp-in-block.md): Connect the early MLP explanation to the Transformer block.
-28. [Linear Head to Logits](27-linear-head.md): Show how hidden vectors become next-token scores.
-29. [Training Loop in Code](28-training-loop-code.md): Connect the theory to the training function.
-30. [Sampling Loop](29-sampling-loop.md): Explain generation as repeated forward passes.
-31. [What to Inspect](30-what-to-inspect.md): Give the audience practical checkpoints.
-32. [Recap](31-recap.md): Close with the full connected path.
-
-Keep slide-visible text and speaker notes English-only. Preserve the dark blueprint visual language shown in `share/deck/refs/01-ref-blueprint.png`.
+- 01. [Build a Mini-GPT from Scratch](00-cover.md)
+- 02. [Agenda](01-agenda.md)
+- 03. [Transformer Is the Architecture](02-transformer-is-the-architecture.md)
+- 04. [From MicroGPT to Our Mini-GPT](03-from-microgpt-to-our-mini-gpt.md)
+- 05. [Neural Network Basics](04-neural-network-basics.md)
+- 06. [A Neural Network Is a Function](05-a-neural-network-is-a-function.md)
+- 07. [One Neuron: y = Wx + b](06-one-neuron-y-wx-b.md)
+- 08. [From Neuron to MLP](07-from-neuron-to-mlp.md)
+- 09. [ReLU Adds a Bend](08-relu-adds-a-bend.md)
+- 10. [Prediction and Loss](09-prediction-and-loss.md)
+- 11. [Backprop and AdamW](10-backprop-and-adamw.md)
+- 12. [From Text to Token IDs](11-from-text-to-token-ids.md)
+- 13. [Names as Tiny Documents](12-names-as-tiny-documents.md)
+- 14. [Why We Need a Tokenizer](13-why-we-need-a-tokenizer.md)
+- 15. [BPE vs Character Tokens](14-bpe-vs-character-tokens.md)
+- 16. [Dennis to Token IDs](15-dennis-to-token-ids.md)
+- 17. [Inputs and Targets Are Shifted](16-inputs-and-targets-are-shifted.md)
+- 18. [From Token IDs to Vectors](17-from-token-ids-to-vectors.md)
+- 19. [Token IDs Are Not Meaning](18-token-ids-are-not-meaning.md)
+- 20. [Token Embedding](19-token-embedding.md)
+- 21. [Position Embedding](20-position-embedding.md)
+- 22. [The Hidden Stream](21-the-hidden-stream.md)
+- 23. [Inside the Transformer Block](22-inside-the-transformer-block.md)
+- 24. [Decoder-Only Map](23-decoder-only-map.md)
+- 25. [Attention Intuition](24-attention-intuition.md)
+- 26. [Q, K, V Roles](25-q-k-v-roles.md)
+- 27. [Scores and Softmax](26-scores-and-softmax.md)
+- 28. [Causal Mask](27-causal-mask.md)
+- 29. [Multi-Head Attention](28-multi-head-attention.md)
+- 30. [RMSNorm and Residuals](29-rmsnorm-and-residuals.md)
+- 31. [The MLP Block](30-the-mlp-block.md)
+- 32. [Linear Head to Logits](31-linear-head-to-logits.md)
+- 33. [Training Mini-GPT](32-training-mini-gpt.md)
+- 34. [Training Loop: PyTorch View](33-training-loop-pytorch-view.md)
+- 35. [Loss Goes Down](34-loss-goes-down.md)
+- 36. [Generating Names](35-generating-names.md)
+- 37. [Sampling Loop](36-sampling-loop.md)
+- 38. [Temperature Controls Creativity](37-temperature-controls-creativity.md)
+- 39. [Recap: Dennis Through Mini-GPT](38-recap-dennis-through-mini-gpt.md)
+- 40. [What to Inspect in Code](39-what-to-inspect-in-code.md)
+- 41. [References](40-references.md)
+- 42. [Q&A / Thank You](41-qanda-thank-you.md)

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build a Mini-GPT from scratch</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; background: #07182e; color: #f5f9ff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; overflow: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(rgba(85,215,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(85,215,255,.055) 1px, transparent 1px); background-size: 42px 42px; pointer-events: none; }
+    .slide { width: 100vw; height: 100vh; display: none; place-items: center; padding: min(3vw, 2rem); }
+    .slide.is-active { display: grid; }
+    .slide-image { width: min(100%, calc(100vh * 16 / 9)); height: min(100%, calc(100vw * 9 / 16)); object-fit: contain; border: 1px solid rgba(85,215,255,.22); border-radius: 8px; box-shadow: 0 24px 54px rgba(0,0,0,.36); background: #07182e; }
+    .speaker-notes { display: none; }
+    .hud { position: fixed; left: 1rem; bottom: 1rem; z-index: 5; color: rgba(245,249,255,.72); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
+    .status-message { position: fixed; left: 1rem; top: 1rem; z-index: 8; max-width: min(28rem, calc(100vw - 2rem)); padding: .7rem .85rem; border: 1px solid rgba(85,215,255,.32); border-radius: 8px; background: rgba(5,16,31,.94); color: rgba(245,249,255,.9); font-size: .9rem; line-height: 1.35; box-shadow: 0 18px 36px rgba(0,0,0,.28); opacity: 0; pointer-events: none; transform: translateY(-.25rem); transition: opacity .16s ease, transform .16s ease; }
+    .status-message.is-visible { opacity: 1; transform: translateY(0); }
+    .controls { position: fixed; left: 50%; bottom: .75rem; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: .5rem; padding: .35rem; border: 1px solid rgba(85,215,255,.24); border-radius: 8px; background: rgba(4,15,30,.76); box-shadow: 0 18px 36px rgba(0,0,0,.28); backdrop-filter: blur(12px); }
+    .deck-button,
+    .presenter-toggle { border: 1px solid rgba(85,215,255,.35); border-radius: 8px; background: rgba(7,24,46,.9); color: #f5f9ff; min-width: 4.8rem; height: 2.25rem; padding: 0 .75rem; font: inherit; font-size: .82rem; cursor: pointer; }
+    .deck-button:hover,
+    .presenter-toggle:hover { border-color: rgba(85,215,255,.72); background: rgba(11,39,73,.96); }
+    .deck-button:focus-visible,
+    .presenter-toggle:focus-visible { outline: 2px solid #55d7ff; outline-offset: 2px; }
+    .deck-button:disabled { opacity: .42; cursor: default; }
+    .deck-button[aria-pressed="true"] { background: rgba(85,215,255,.2); border-color: rgba(85,215,255,.78); }
+    .presenter-toggle { position: fixed; right: 1rem; bottom: 1rem; z-index: 5; }
+    .notes-panel { position: fixed; top: 1rem; right: 1rem; z-index: 7; display: none; width: min(28rem, calc(100vw - 2rem)); max-height: calc(100vh - 5rem); overflow: auto; padding: 1rem; border: 1px solid rgba(85,215,255,.32); border-radius: 8px; background: rgba(5,16,31,.94); box-shadow: 0 24px 54px rgba(0,0,0,.38); backdrop-filter: blur(14px); }
+    .notes-panel.is-open { display: block; }
+    .notes-title { margin: 0 0 .65rem; color: #55d7ff; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .notes-body { margin: 0; color: rgba(245,249,255,.9); font-size: 1rem; line-height: 1.5; white-space: pre-wrap; }
+    @media (max-width: 760px) {
+      .slide { padding-bottom: 4.5rem; }
+      .slide-image { height: auto; }
+      .hud { left: .75rem; bottom: 4rem; }
+      .controls { width: calc(100vw - 1.5rem); justify-content: center; }
+      .deck-button,
+      .presenter-toggle { min-width: 0; flex: 1 1 auto; padding: 0 .55rem; }
+      .presenter-toggle { right: .75rem; bottom: .75rem; width: calc((100vw - 2rem) / 4); }
+    }
+  </style>
+</head>
+<body>
+  <section class="slide" data-title="Build a Mini-GPT from scratch">
+    <img class="slide-image" src="../deck/01-slide-cover.png" alt="Build a Mini-GPT from scratch">
+    <div class="speaker-notes">Hello everyone. I am Molin from ECP CIS.
+
+Today we will talk about how to build a Mini-GPT from scratch.
+
+The goal is simple: use a small model to understand the Transformer architecture and how it works.
+
+Let's get started.</div>
+  </section>
+
+  <section class="slide" data-title="Transformer Is the Foundation">
+    <img class="slide-image" src="../deck/02-slide-transformer-next-token.png" alt="Transformer Is the Foundation">
+    <div class="speaker-notes">Before we build anything, let us set the map.
+
+Many modern AI models are based on the Transformer architecture. The Transformer was introduced in the paper Attention Is All You Need in 2017.
+
+For a GPT-style model, the main job is simple to say: read the tokens so far, and predict the next token.
+
+The paper link is on the slide, so you can find the original source after the talk.
+
+In this talk, we will see the pieces that make this possible.</div>
+  </section>
+
+  <section class="slide" data-title="Why MicroGPT">
+    <img class="slide-image" src="../deck/03-slide-why-build-microgpt.png" alt="Why MicroGPT">
+    <div class="speaker-notes">If we only talk about concepts, Transformer can feel too abstract.
+
+So we will use a small project and build it step by step. The project is inspired by Andrej Karpathy's MicroGPT code and makemore style.
+
+The model trains on about 32K names. After training, it can generate new name-like strings.
+
+The source links are on the slide, so you can explore the original code and dataset later.
+
+The task is small, but it contains the same path: tokens, Transformer blocks, logits, loss, and sampling.</div>
+  </section>
+
+  <section class="slide" data-title="A Neural Network Is a Function">
+    <img class="slide-image" src="../deck/04-slide-function-view.png" alt="A Neural Network Is a Function">
+    <div class="speaker-notes">Before we say Transformer, let us start with a simple idea. A neural network is a function.
+
+The input is a group of numbers. The function has parameters, also called weights. The output is another group of numbers.
+
+For our Mini-GPT, the output numbers are scores for possible next characters. At first these scores are bad. Training changes the parameters so the scores become more useful.</div>
+  </section>
+
+  <section class="slide" data-title="One Neuron">
+    <img class="slide-image" src="../deck/05-slide-single-neuron.png" alt="One Neuron">
+    <div class="speaker-notes">A single neuron is a very small computation. It takes several input numbers, multiplies them by weights, and adds the results.
+
+Then it usually applies a nonlinearity. In this project, the MLP uses ReLU. ReLU is simple: negative values become zero, positive values stay positive.
+
+One neuron is not enough for GPT, but it gives us the basic building block: weighted information plus a simple nonlinear step.</div>
+  </section>
+
+  <section class="slide" data-title="From Neuron to MLP">
+    <img class="slide-image" src="../deck/06-slide-mlp-stack.png" alt="From Neuron to MLP">
+    <div class="speaker-notes">When we place many neurons side by side, we get a layer. When we stack layers, we get a small neural network called an MLP.
+
+In our Mini-GPT block, the MLP is Linear, then ReLU, then Linear. It does not talk across time. It works inside each token position.
+
+This is important. Attention is the part that reads other positions. The MLP is the part that computes new features at the current position.</div>
+  </section>
+
+  <section class="slide" data-title="Prediction and Loss">
+    <img class="slide-image" src="../deck/07-slide-prediction-loss.png" alt="Prediction and Loss">
+    <div class="speaker-notes">The model outputs logits. Logits are raw scores. They are not probabilities yet.
+
+Softmax turns these scores into probabilities. If the true next character is n, then a good model gives high probability to n.
+
+Cross-entropy loss is high when the correct character has low probability. It is low when the correct character has high probability. So loss gives us one number to improve.</div>
+  </section>
+
+  <section class="slide" data-title="Backprop and Update">
+    <img class="slide-image" src="../deck/08-slide-backprop-update.png" alt="Backprop and Update">
+    <div class="speaker-notes">Training is not mysterious. We run the model, compute loss, compute gradients, and update the parameters.
+
+Backpropagation tells each parameter how it affected the loss. AdamW uses those gradients to move the parameter a small amount.
+
+After many updates, the model becomes less surprised by real training examples. In our case, it becomes better at predicting the next character in a name.</div>
+  </section>
+
+  <section class="slide" data-title="Names as Tiny Documents">
+    <img class="slide-image" src="../deck/09-slide-name-data.png" alt="Names as Tiny Documents">
+    <div class="speaker-notes">Now we connect the neural network to the data. In a MicroGPT-style name model, each name is a tiny document.
+
+We add a special token called BOS. It can mean beginning of sequence, and in this small project it also marks the end.
+
+So the name dennis becomes BOS, d, e, n, n, i, s, BOS. This one sequence creates many next-character training examples.</div>
+  </section>
+
+  <section class="slide" data-title="The Next-Token Task">
+    <img class="slide-image" src="../deck/10-slide-next-token-task.png" alt="The Next-Token Task">
+    <div class="speaker-notes">The next-token task is made by shifting the sequence by one step.
+
+The input row might be BOS, d, e, n. The target row is d, e, n, n. At each position, the model predicts the next character.
+
+This is very efficient for learning. One short name gives many small prediction tasks. The Transformer learns from all positions at the same time.</div>
+  </section>
+
+  <section class="slide" data-title="What a Tokenizer Does">
+    <img class="slide-image" src="../deck/11-slide-tokenizer-idea.png" alt="What a Tokenizer Does">
+    <div class="speaker-notes">A tokenizer is the boundary between human text and model input.
+
+The model cannot read the string directly. The tokenizer splits the text into tokens, maps each token to an integer id, and can later decode ids back into text.
+
+For our small model, tokens are characters. For large GPT systems, tokens are often pieces of words. The idea is the same: text becomes ids.</div>
+  </section>
+
+  <section class="slide" data-title="Tokenizer Example: I love CIS">
+    <img class="slide-image" src="../deck/12-slide-tiktoken-example.png" alt="Tokenizer Example: I love CIS">
+    <div class="speaker-notes">Let us use the text I love CIS. A production GPT tokenizer, such as tiktoken, may split this into word pieces. For example, I, space-love, and space-CIS may be separate tokens depending on the vocabulary.
+
+Our Mini-GPT tokenizer is simpler. It splits the same text into characters.
+
+The split is different, but the final interface is the same. The model receives integer ids. It does not receive the original text string.</div>
+  </section>
+
+  <section class="slide" data-title="Character Tokenizer: Dennis">
+    <img class="slide-image" src="../deck/13-slide-char-tokenizer-dennis.png" alt="Character Tokenizer: Dennis">
+    <div class="speaker-notes">For the name Dennis, we lowercase it for the tiny model and treat each character as a token.
+
+The wrapped sequence is BOS, d, e, n, n, i, s, BOS. Each symbol has an id from the tokenizer vocabulary.
+
+This is simple enough to test directly. If we encode and then decode a name, we should get the same name back, except for the special tokens we choose to add or remove.</div>
+  </section>
+
+  <section class="slide" data-title="Token IDs Are Not Meaning">
+    <img class="slide-image" src="../deck/14-slide-ids-are-not-meaning.png" alt="Token IDs Are Not Meaning">
+    <div class="speaker-notes">A very common mistake is to think token ids have meaning by themselves.
+
+They do not. If d has id 4 and n has id 14, that does not mean n is ten units away from d in a useful language space.
+
+The id is just an address. It chooses a row in an embedding table. The vector in that row is what the model will learn and use.</div>
+  </section>
+
+  <section class="slide" data-title="Token Embedding">
+    <img class="slide-image" src="../deck/15-slide-token-embedding.png" alt="Token Embedding">
+    <div class="speaker-notes">The token embedding table has one row for each token in the vocabulary.
+
+When the model sees token id 4, it selects row 4 from the table. That row is a vector. The vector length is the model dimension.
+
+At the start, these vectors are random. During training, the vectors move so useful character patterns become easier for the Transformer to compute.</div>
+  </section>
+
+  <section class="slide" data-title="Position Embedding">
+    <img class="slide-image" src="../deck/16-slide-position-embedding.png" alt="Position Embedding">
+    <div class="speaker-notes">A token embedding tells the model what symbol it is. But the model also needs to know where the symbol is.
+
+In the prefix denn, the two n characters have the same token id. Without position information, they would start with the same vector.
+
+So Mini-GPT adds a position embedding. Token vector plus position vector becomes the first hidden state for each position.</div>
+  </section>
+
+  <section class="slide" data-title="The Hidden Stream">
+    <img class="slide-image" src="../deck/17-slide-hidden-stream.png" alt="The Hidden Stream">
+    <div class="speaker-notes">After token and position embeddings are added, the model has a hidden stream.
+
+The shape is B, T, D. B is batch size. T is the number of positions. D is the vector size.
+
+Each position has its own vector. The Transformer block will update these vectors. Attention lets positions share information. The MLP computes new features inside each position.</div>
+  </section>
+
+  <section class="slide" data-title="MicroGPT Decoder-Only Map">
+    <img class="slide-image" src="../deck/18-slide-decoder-only-map.png" alt="MicroGPT Decoder-Only Map">
+    <div class="speaker-notes">Now we can look at the full MicroGPT-style architecture.
+
+It is decoder-only. That means there is no separate encoder. The model reads the previous tokens and predicts the next token.
+
+The path is simple to say: token ids become embeddings, embeddings pass through repeated Transformer blocks, a final norm prepares the vectors, and a linear head produces logits for the next token.</div>
+  </section>
+
+  <section class="slide" data-title="Inside One Transformer Block">
+    <img class="slide-image" src="../deck/19-slide-block-map.png" alt="Inside One Transformer Block">
+    <div class="speaker-notes">A Transformer block has two main jobs.
+
+First, attention lets one position read information from earlier positions. Second, the MLP computes new features inside each position.
+
+RMSNorm helps keep vector scale stable. Residual connections add the new information back to the old stream. This makes the model easier to train and easier to think about.</div>
+  </section>
+
+  <section class="slide" data-title="Attention Intuition">
+    <img class="slide-image" src="../deck/20-slide-attention-intuition.png" alt="Attention Intuition">
+    <div class="speaker-notes">Attention is easier to understand as content lookup.
+
+Imagine the final n in the prefix denn. To predict the next character, it may need to read earlier context. It can look left at d, e, and the previous n.
+
+Attention gives the model a learned way to score those visible positions and mix their information into the current vector.</div>
+  </section>
+
+  <section class="slide" data-title="Q, K, V Roles">
+    <img class="slide-image" src="../deck/21-slide-qkv-roles.png" alt="Q, K, V Roles">
+    <div class="speaker-notes">For each position, the model makes three vectors: query, key, and value.
+
+The query is like a question from the current position: what information do I need? The key is like a description of each visible position: what do I contain?
+
+The value is the information that will be sent if that position is useful. Q and K decide the attention weights. V is what gets mixed.</div>
+  </section>
+
+  <section class="slide" data-title="Attention Scores">
+    <img class="slide-image" src="../deck/22-slide-attention-scores.png" alt="Attention Scores">
+    <div class="speaker-notes">The attention score is usually made with a dot product between query and key.
+
+If the query and key match well, the score is high. If they do not match, the score is low.
+
+Then the causal mask blocks future positions. Finally, softmax turns the visible scores into weights. Those weights decide how much value information will be mixed into the current position.</div>
+  </section>
+
+  <section class="slide" data-title="QKV Animation Plan">
+    <img class="slide-image" src="../deck/23-slide-qkv-animation-plan.png" alt="QKV Animation Plan">
+    <div class="speaker-notes">This slide is a clear plan for the QKV animation.
+
+First, each hidden vector is projected into Q, K, and V. Second, the current query compares with the keys from visible positions. Third, the mask removes future positions. Fourth, the final weights mix the value vectors.
+
+Even if we show it as an animation, the idea is still simple: ask, match, block the future, and mix useful information.</div>
+  </section>
+
+  <section class="slide" data-title="Causal Mask">
+    <img class="slide-image" src="../deck/24-slide-causal-mask.png" alt="Causal Mask">
+    <div class="speaker-notes">During training, we give the model a whole window of tokens. Without a mask, a position could look at the answer on its right.
+
+That would be cheating. GPT must learn to predict from the past, because during generation the future does not exist yet.
+
+The causal mask solves this. Each position can read itself and earlier positions, but it cannot read later positions.</div>
+  </section>
+
+  <section class="slide" data-title="Multi-Head Attention">
+    <img class="slide-image" src="../deck/25-slide-multi-head.png" alt="Multi-Head Attention">
+    <div class="speaker-notes">Multi-head attention means the model runs several attention operations in parallel.
+
+Each head gets part of the vector channels. One head might learn local spelling rhythm. Another might learn likely endings. Another might notice repeated letters like n n.
+
+After the heads read context in different ways, their outputs are merged back into one vector stream.</div>
+  </section>
+
+  <section class="slide" data-title="RMSNorm and Residuals">
+    <img class="slide-image" src="../deck/26-slide-rmsnorm-residual.png" alt="RMSNorm and Residuals">
+    <div class="speaker-notes">RMSNorm and residual connections are not the flashiest parts, but they matter.
+
+RMSNorm keeps vector scale under control before attention or the MLP. The residual connection adds the new result back to the old stream.
+
+This means each block can make an edit instead of replacing everything. That makes deep stacks easier to train.</div>
+  </section>
+
+  <section class="slide" data-title="The MLP Inside the Block">
+    <img class="slide-image" src="../deck/27-slide-mlp-in-block.png" alt="The MLP Inside the Block">
+    <div class="speaker-notes">Now the earlier MLP idea comes back.
+
+Inside each Transformer block, after attention has shared information, the MLP computes new features at each position. It uses Linear, ReLU, and Linear.
+
+The same MLP weights are applied to every position. So attention is communication across positions, while the MLP is computation inside each position.</div>
+  </section>
+
+  <section class="slide" data-title="Linear Head to Logits">
+    <img class="slide-image" src="../deck/28-slide-linear-head.png" alt="Linear Head to Logits">
+    <div class="speaker-notes">After the Transformer blocks, the model still has one vector for each position.
+
+A final linear head maps each vector from model dimension D to vocabulary size V. That gives one logit score for each possible next token.
+
+During generation, we usually read the logits at the final position. Those logits tell us what the model thinks the next token could be.</div>
+  </section>
+
+  <section class="slide" data-title="Training Loop in Code">
+    <img class="slide-image" src="../deck/29-slide-training-loop-code.png" alt="Training Loop in Code">
+    <div class="speaker-notes">Now the code should look familiar.
+
+The training loop gets a batch of token ids and targets. It runs the model forward. It computes the loss. Then it clears old gradients, runs backward, and calls the optimizer step.
+
+This is the same loop we saw near the beginning. The only difference is that now the function is a Transformer instead of a simple MLP.</div>
+  </section>
+
+  <section class="slide" data-title="Sampling Loop">
+    <img class="slide-image" src="../deck/30-slide-sampling-loop.png" alt="Sampling Loop">
+    <div class="speaker-notes">Generation is not a new model. It reuses the same forward pass.
+
+We start from BOS or from a prompt like den. We crop the context if it is longer than block size. We run the model and read the logits at the last position.
+
+Then we sample one token, append it, and repeat. When the model samples BOS again, we stop and decode the name.</div>
+  </section>
+
+  <section class="slide" data-title="What to Inspect">
+    <img class="slide-image" src="../deck/31-slide-what-to-inspect.png" alt="What to Inspect">
+    <div class="speaker-notes">The best part of a tiny implementation is visibility.
+
+We can test that the tokenizer round-trips text correctly. We can print shapes like B, T, and D. We can inspect the causal mask. We can watch loss go down and samples become more name-like.
+
+This habit is useful even when working with larger systems. Always connect the concept to something you can check.</div>
+  </section>
+
+  <section class="slide" data-title="Recap">
+    <img class="slide-image" src="../deck/32-slide-recap.png" alt="Recap">
+    <div class="speaker-notes">Let us recap the whole path.
+
+A neural network is a trainable function. Our tokenizer turns text into ids. Embeddings turn ids and positions into vectors. Transformer blocks update those vectors. Attention lets positions read earlier context. The linear head produces logits, and sampling turns logits into new characters.
+
+That is the core idea of GPT, shown in a tiny model we can inspect.</div>
+  </section>
+  <div class="hud" aria-live="polite"></div>
+  <div class="status-message" role="status" aria-live="polite"></div>
+  <div class="controls" role="group" aria-label="Slide controls">
+    <button class="deck-button prev-button" type="button" data-action="prev">Prev</button>
+    <button class="deck-button next-button" type="button" data-action="next">Next</button>
+    <button class="deck-button notes-toggle" type="button" data-action="notes" aria-controls="notes-panel" aria-expanded="false">Notes</button>
+  </div>
+  <aside class="notes-panel" id="notes-panel" aria-label="Speaker notes" aria-live="polite">
+    <div class="notes-title"></div>
+    <p class="notes-body"></p>
+  </aside>
+  <button class="presenter-toggle" type="button" data-action="presenter">Presenter</button>
+  <script>
+    const slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+    const hud = document.querySelector(".hud");
+    const statusMessage = document.querySelector(".status-message");
+    const prevButton = document.querySelector(".prev-button");
+    const nextButton = document.querySelector(".next-button");
+    const notesToggle = document.querySelector(".notes-toggle");
+    const notesPanel = document.querySelector(".notes-panel");
+    const notesTitle = document.querySelector(".notes-title");
+    const notesBody = document.querySelector(".notes-body");
+    let current = 0;
+    let presenterWindow = null;
+    let statusTimer = null;
+
+    function notes(index) {
+      const node = slides[index] ? slides[index].querySelector(".speaker-notes") : null;
+      return node ? node.textContent.trim() : "";
+    }
+
+    function showStatus(message) {
+      if (!statusMessage) return;
+      statusMessage.textContent = message;
+      statusMessage.classList.add("is-visible");
+      window.clearTimeout(statusTimer);
+      statusTimer = window.setTimeout(function () {
+        statusMessage.classList.remove("is-visible");
+      }, 3600);
+    }
+
+    function setChildren(parent) {
+      while (parent.firstChild) parent.removeChild(parent.firstChild);
+      for (let i = 1; i < arguments.length; i += 1) parent.appendChild(arguments[i]);
+    }
+
+    function closestActionButton(target) {
+      let node = target;
+      while (node && node !== document) {
+        if (node.nodeType === 1 && node.hasAttribute("data-action")) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    function show(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle("is-active", i === current);
+        slide.setAttribute("aria-hidden", String(i !== current));
+      });
+      hud.textContent = "Slide " + (current + 1) + " / " + slides.length;
+      prevButton.disabled = current === 0;
+      nextButton.disabled = current === slides.length - 1;
+      notesTitle.textContent = "Slide " + (current + 1) + " Notes";
+      notesBody.textContent = notes(current);
+      updatePresenter();
+    }
+
+    function toggleNotes(forceOpen) {
+      const open = typeof forceOpen === "boolean" ? forceOpen : !notesPanel.classList.contains("is-open");
+      notesPanel.classList.toggle("is-open", open);
+      notesToggle.setAttribute("aria-expanded", String(open));
+      notesToggle.setAttribute("aria-pressed", String(open));
+    }
+
+    function buildPresenterDocument() {
+      const doc = presenterWindow.document;
+      const root = doc.documentElement || doc.appendChild(doc.createElement("html"));
+      if (!doc.head) root.insertBefore(doc.createElement("head"), root.firstChild);
+      if (!doc.body) root.appendChild(doc.createElement("body"));
+      doc.documentElement.lang = "en";
+      setChildren(doc.head);
+
+      const titleTag = doc.createElement("title");
+      titleTag.textContent = "Speaker Notes";
+      const style = doc.createElement("style");
+      const deckStyle = document.querySelector("style");
+      style.textContent = (deckStyle ? deckStyle.textContent : "") + [
+        "body{margin:0;background:#101114;color:#f5f7fb;font-family:system-ui,sans-serif;display:grid;grid-template-columns:1fr 1fr;height:100vh}",
+        ".preview{display:grid;place-items:center;padding:1rem;background:#07182e;overflow:hidden}",
+        ".preview .slide-frame,.preview .slide-image{width:100%;height:auto;max-height:100%;box-shadow:none}",
+        ".preview .slide-frame{aspect-ratio:16/9}",
+        ".notes{padding:2rem;overflow:auto;border-left:1px solid #303542}",
+        ".notes h1{color:#55d7ff;font-size:1rem;letter-spacing:0;text-transform:uppercase}",
+        ".notes p{font-size:1.35rem;line-height:1.5;white-space:pre-wrap}"
+      ].join("");
+      doc.head.appendChild(titleTag);
+      doc.head.appendChild(style);
+
+      const preview = doc.createElement("div");
+      preview.className = "preview";
+      const notesWrap = doc.createElement("div");
+      notesWrap.className = "notes";
+      const title = doc.createElement("h1");
+      title.textContent = "Speaker Notes";
+      const body = doc.createElement("p");
+      setChildren(notesWrap, title, body);
+      setChildren(doc.body, preview, notesWrap);
+    }
+
+    function openPresenter() {
+      if (!presenterWindow || presenterWindow.closed) {
+        presenterWindow = window.open("", "mini-gpt-presenter", "width=1280,height=720");
+        if (!presenterWindow) {
+          showStatus("Presenter window was blocked. Allow pop-ups for this page, then click Presenter again.");
+          return;
+        }
+        buildPresenterDocument();
+      }
+      presenterWindow.focus();
+      updatePresenter();
+    }
+
+    function updatePresenter() {
+      if (!presenterWindow || presenterWindow.closed) return;
+      const sourceFrame = slides[current].querySelector(".slide-frame");
+      const sourceImg = slides[current].querySelector("img");
+      if (!sourceFrame && !sourceImg) return;
+      const preview = presenterWindow.document.querySelector(".preview");
+      const notesText = presenterWindow.document.querySelector(".notes p");
+      if (!preview || !notesText) return;
+      const previewNode = sourceFrame ? sourceFrame.cloneNode(true) : sourceImg.cloneNode(false);
+      if (!sourceFrame) previewNode.src = sourceImg.src;
+      setChildren(preview, previewNode);
+      notesText.textContent = notes(current);
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") { event.preventDefault(); show(current + 1); }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") { event.preventDefault(); show(current - 1); }
+      if (event.key === "Home") { event.preventDefault(); show(0); }
+      if (event.key === "End") { event.preventDefault(); show(slides.length - 1); }
+      if (event.key.toLowerCase() === "p") { event.preventDefault(); openPresenter(); }
+      if (event.key.toLowerCase() === "n") { event.preventDefault(); toggleNotes(); }
+      if (event.key === "Escape") { toggleNotes(false); }
+    });
+    document.addEventListener("click", function (event) {
+      const button = closestActionButton(event.target);
+      if (!button) return;
+      const action = button.getAttribute("data-action");
+      if (action === "prev") show(current - 1);
+      if (action === "next") show(current + 1);
+      if (action === "notes") toggleNotes();
+      if (action === "presenter") openPresenter();
+    });
+    show(0);
+  </script>
+</body>
+</html>

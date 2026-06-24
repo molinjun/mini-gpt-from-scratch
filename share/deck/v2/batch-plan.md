@@ -62,6 +62,8 @@ Review focus:
 
 ## Batch 4: Transformer Architecture
 
+Status: Generated in `share/deck/v2/` and included in `share/deck/v2/index.html`.
+
 Slides:
 - 23 Inside the Transformer Block
 - 24 Decoder-Only Map
@@ -81,6 +83,8 @@ Review focus:
 - Architecture diagrams are readable and not overloaded.
 
 ## Batch 5: Training, Inference, and Closing
+
+Status: Generated in `share/deck/v2/` and included in `share/deck/v2/index.html`.
 
 Slides:
 - 33 Training Mini-GPT
@@ -102,6 +106,11 @@ Review focus:
 
 ## Promotion Checklist
 
+- V2 preview complete: `share/deck/v2/index.html` contains 42 slides.
+- V2 exports complete: `share/deck/v2/build-mini-gpt-from-scratch-v2.pptx` and `share/deck/v2/build-mini-gpt-from-scratch-v2.pdf`.
+- Formal promotion status: promoted to `share/slides/index.html` and `share/deck/build-mini-gpt-from-scratch.pptx`.
+- Speaker notes source: `share/deck/v2/speaker-notes.md` and `docs/00-*.md` through `docs/41-*.md`.
+- Talk flow source: `share/deck/v2/talk-flow.md`.
 - Generate a batch into `share/deck/v2/`.
 - Review generated PNGs in a temporary preview.
 - Regenerate any weak slide before promotion.
