@@ -10,7 +10,7 @@ Visual style: dark blueprint, navy grid, cyan/electric-blue lines, crisp technic
 
 Generation rules:
 - Prefer familiar running examples: `ECP CIS`, `I love CIS`, and `Dennis`.
-- Avoid generic generated words such as `Machine` unless the slide explicitly needs them.
+- Avoid unfamiliar generic filler words; prefer project-specific terms from this deck.
 - For the character tokenizer, keep token IDs small and realistic: `vocab_size = 27`, IDs in the `0..26` range.
 - Add short concept definition chips on technical slides, for example `logits = raw scores`, `gradient = direction to reduce loss`, and `softmax = scores to probabilities`.
 
@@ -19,7 +19,7 @@ Generation rules:
 Section: Opening
 
 Slide-visible bullets:
-- Understand Transformer architecture
+- Understand Transformer architecture and how it works
 - Build a tiny name generator
 - Speaker: Zhiqiang Ge, ECP CIS
 
@@ -27,7 +27,7 @@ Speaker notes:
 Hello everyone. I am Zhiqiang Ge from ECP CIS. Today we will build a Mini-GPT from scratch. The goal is to understand the Transformer architecture with a small model we can explain step by step.
 
 Visual direction:
-Simple cover. Left side title and speaker. Right side a compact token flow: `ECP CIS` -> `next token` -> `Awesome`.
+Simple cover. Left side title, subtitle, speaker, and team. Render `Understand Transformer Architecture and How It Works` as a subtitle, not as a bullet list. Right side a compact token flow: `ECP CIS` -> `next token` -> `Awesome`.
 
 Code snippet intent:
 None.
@@ -50,7 +50,7 @@ Speaker notes:
 Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we cover the neural network basics we need for training. Third, we turn text into token IDs and vectors. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference.
+Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel may show `I love CIS` token boxes, but should not show arbitrary numeric token IDs.
 
 Code snippet intent:
 None.
@@ -92,7 +92,7 @@ Speaker notes:
 The full Transformer is still too large to learn all at once. So we borrow the spirit of Andrej Karpathy's MicroGPT and build our own Mini-GPT. The task is simple: generate names. This small task still shows the full path: tokenizer, embeddings, Transformer blocks, logits, and sampling.
 
 Visual direction:
-Source-and-task slide: Andrej Karpathy / MicroGPT source card, makemore names dataset card, then our Mini-GPT workbench producing sample names such as `Dennis`. Include source chips for MicroGPT and makemore.
+Source-and-task slide with no human portrait: Andrej Karpathy name as a source label, MicroGPT code card, makemore names dataset card, then our Mini-GPT workbench producing sample names such as `Dennis`. Include source chips: `MicroGPT gist` and `github.com/karpathy/makemore`.
 
 Code snippet intent:
 None.
@@ -556,7 +556,7 @@ Speaker notes:
 Q, K, and V are three learned projections of the same hidden vector. Use the familiar phrase `I love CIS`. When the current token is `CIS`, its Query asks what information it needs. The Keys describe the context tokens `I` and `love`. The Values carry the information that will be mixed.
 
 Visual direction:
-Three-panel diagram using the exact tokens `I love CIS`. Highlight current token `CIS`. Show Query from `CIS` matching Keys from `I`, `love`, and `CIS`, then Values carrying information into a mixed vector. Add a definition chip: "Q/K/V = learned projections". Do not use generic words like `Machine`.
+Three-panel diagram using the exact tokens `I love CIS`. Highlight current token `CIS`. Show Query from `CIS` matching Keys from `I`, `love`, and `CIS`, then Values carrying information into a mixed vector. Add a definition chip: "Q/K/V = learned projections". Use only project-specific sample text.
 
 Code snippet intent:
 PyTorch teaching snippet: `q, k, v = self.q(x), self.k(x), self.v(x)`.
@@ -832,7 +832,7 @@ Slide-visible bullets:
 - Sample -> append -> repeat
 
 Speaker notes:
-Let us follow `Denn` through the whole machine. The text becomes token IDs. IDs become vectors. Transformer blocks process the hidden stream. The head gives logits. Softmax gives probabilities. We sample `i`, append it, and continue.
+Let us follow `Denn` through the full Mini-GPT flow. The text becomes token IDs. IDs become vectors. Transformer blocks process the hidden stream. The head gives logits. Softmax gives probabilities. We sample `i`, append it, and continue.
 
 Visual direction:
 Long pipeline from `Denn` to `Dennis`: character tokenizer with small IDs, embedding, position, attention, MLP, logits, softmax, sample. Show character-level tokens such as `d e n n` and small IDs such as `[4, 5, 14, 14]`. Add definition chips: "logits = raw scores" and "softmax = probabilities".

@@ -1,3 +1,34 @@
+---
+slide: 40
+title: "What to Inspect in Code"
+section: "Recap and References"
+output: "40-slide-what-to-inspect-in-code.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+What to Inspect in Code
+
+Slide-visible text to render:
+- Tokenizer: text and IDs
+- Model: blocks and logits
+- Training: loss and sampling
+
+Speaker-note intent, for context only:
+After the talk, these are the best places to inspect in code. Start from the tokenizer, then the model forward pass, and then the training and sampling loops.
+
+Visual direction:
+Three code file panels: tokenizer, model, train loop. Use short labels, not dense code.
+
+Code snippet intent:
+Reference paths only: `src/tokenizer.py`, `src/model.py`, `src/train.py`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 40-slide-what-to-inspect-in-code.png

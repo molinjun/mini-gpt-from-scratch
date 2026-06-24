@@ -1,3 +1,34 @@
+---
+slide: 27
+title: "Scores and Softmax"
+section: "Transformer Architecture"
+output: "27-slide-scores-and-softmax.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Scores and Softmax
+
+Slide-visible text to render:
+- Score = Q dot K match strength
+- Softmax turns scores into weights
+- Weights mix the values
+
+Speaker-note intent, for context only:
+We compare queries with keys using a dot product. This gives attention scores, which mean match strength. We scale the scores, then softmax turns them into weights that add up to one. Those weights decide how much value information to mix.
+
+Visual direction:
+Matrix multiplication view: `Q @ K.T`, scale, softmax, attention matrix. Add definition chips: "score = match strength" and "softmax = scores to weights".
+
+Code snippet intent:
+PyTorch teaching snippet: `scores = q @ k.transpose(-2, -1) / sqrt(d_k)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 27-slide-scores-and-softmax.png

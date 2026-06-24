@@ -1,3 +1,34 @@
+---
+slide: 19
+title: "Token IDs Are Not Meaning"
+section: "Tokenizer and Embedding"
+output: "19-slide-token-ids-are-not-meaning.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Token IDs Are Not Meaning
+
+Slide-visible text to render:
+- ID 4 is not smaller than ID 9
+- IDs do not show similarity
+- Vectors can carry learned meaning
+
+Speaker-note intent, for context only:
+The ID number itself is not semantic. ID 4 is not more meaningful than ID 9. It is just an index. The model needs vectors that can be learned from data.
+
+Visual direction:
+Warning-style comparison: raw IDs as index cards vs vector points in space.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 19-slide-token-ids-are-not-meaning.png

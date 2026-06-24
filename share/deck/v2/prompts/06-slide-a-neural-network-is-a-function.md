@@ -1,3 +1,34 @@
+---
+slide: 06
+title: "A Neural Network Is a Function"
+section: "Neural Network Basics"
+output: "06-slide-a-neural-network-is-a-function.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+A Neural Network Is a Function
+
+Slide-visible text to render:
+- Input `x` maps to output `y`
+- Weights choose the line
+- Training fits the data
+
+Speaker-note intent, for context only:
+The first mental model is simple. A network is a function with parameters. For example, we may have points near the rule `y = 2x + 1`. At the beginning, the model line is wrong. Training changes the parameters so the line fits the data.
+
+Visual direction:
+Line-fitting example: data points on a small plot, a wrong initial line, and adjustable knobs labeled `W` and `b`.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 06-slide-a-neural-network-is-a-function.png

@@ -1,3 +1,34 @@
+---
+slide: 24
+title: "Decoder-Only Map"
+section: "Transformer Architecture"
+output: "24-slide-decoder-only-map.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Decoder-Only Map
+
+Slide-visible text to render:
+- GPT uses decoder-only blocks
+- Blocks repeat the same pattern
+- The head maps vectors to logits
+
+Speaker-note intent, for context only:
+Mini-GPT uses a decoder-only Transformer. We repeat the same block several times. After the blocks, a linear head maps each hidden vector to logits over the vocabulary.
+
+Visual direction:
+Full architecture map: token IDs, embeddings, repeated blocks, final norm, linear head, logits.
+
+Code snippet intent:
+PyTorch class skeleton only if space allows: `token_embedding`, `position_embedding`, `blocks`, `lm_head`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 24-slide-decoder-only-map.png

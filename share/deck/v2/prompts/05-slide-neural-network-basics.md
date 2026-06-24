@@ -1,3 +1,34 @@
+---
+slide: 05
+title: "Neural Network Basics"
+section: "Neural Network Basics"
+output: "05-slide-neural-network-basics.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Neural Network Basics
+
+Slide-visible text to render:
+- `W` and `b` shape predictions
+- ReLU and MLP add flexibility
+- Loss and gradients drive learning
+
+Speaker-note intent, for context only:
+Before the Transformer, we only need a small base. We want three ideas. First, learnable parameters like `W` and `b` shape the model's predictions. Second, ReLU and MLP make the function more flexible. Third, loss and gradients tell the optimizer how to improve the parameters. Later, the Transformer will use the same training idea, but with many learned matrices.
+
+Visual direction:
+Section divider with three goal panels: `W` and `b` shaping a fitted line, ReLU/MLP bending the function, and loss/gradients updating parameters. Add a bridge label: "later: many learned Transformer matrices".
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 05-slide-neural-network-basics.png

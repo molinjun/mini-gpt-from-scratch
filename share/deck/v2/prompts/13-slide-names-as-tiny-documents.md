@@ -1,3 +1,34 @@
+---
+slide: 13
+title: "Names as Tiny Documents"
+section: "Tokenizer and Embedding"
+output: "13-slide-names-as-tiny-documents.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Names as Tiny Documents
+
+Slide-visible text to render:
+- Each name is a short document
+- A special token separates names
+- The dataset becomes one token stream
+
+Speaker-note intent, for context only:
+For this project, names are tiny documents. We use a special token to separate them. Then all names become one long stream for training.
+
+Visual direction:
+Name list flowing into one token stream with separator markers.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 13-slide-names-as-tiny-documents.png

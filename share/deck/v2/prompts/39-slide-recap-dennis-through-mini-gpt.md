@@ -1,3 +1,34 @@
+---
+slide: 39
+title: "Recap: Dennis Through Mini-GPT"
+section: "Recap and References"
+output: "39-slide-recap-dennis-through-mini-gpt.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Recap: Dennis Through Mini-GPT
+
+Slide-visible text to render:
+- Text -> tokens -> vectors
+- Blocks -> logits -> probabilities
+- Sample -> append -> repeat
+
+Speaker-note intent, for context only:
+Let us follow `Denn` through the full Mini-GPT flow. The text becomes token IDs. IDs become vectors. Transformer blocks process the hidden stream. The head gives logits. Softmax gives probabilities. We sample `i`, append it, and continue.
+
+Visual direction:
+Long pipeline from `Denn` to `Dennis`: character tokenizer with small IDs, embedding, position, attention, MLP, logits, softmax, sample. Show character-level tokens such as `d e n n` and small IDs such as `[4, 5, 14, 14]`. Add definition chips: "logits = raw scores" and "softmax = probabilities".
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 39-slide-recap-dennis-through-mini-gpt.png

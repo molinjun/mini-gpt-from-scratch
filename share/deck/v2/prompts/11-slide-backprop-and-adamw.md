@@ -1,3 +1,34 @@
+---
+slide: 11
+title: "Backprop and AdamW"
+section: "Neural Network Basics"
+output: "11-slide-backprop-and-adamw.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Backprop and AdamW
+
+Slide-visible text to render:
+- Backprop computes gradients
+- Gradient = direction to reduce loss
+- AdamW updates weights
+
+Speaker-note intent, for context only:
+Backprop tells each parameter how it affected the loss. A gradient is the direction that helps reduce the loss. AdamW uses gradients to update the weights. In the line example, this means `W` and `b` move a little each step until the line fits better. A Transformer trains many matrices in the same loop.
+
+Visual direction:
+Circular training loop around the line plot: forward prediction, loss gap, backward gradients on `W` and `b`, AdamW update, improved line. Add definition chips: "gradient = direction to reduce loss" and "same loop for Transformer matrices".
+
+Code snippet intent:
+PyTorch teaching snippet: `optimizer.zero_grad()`, `loss.backward()`, `optimizer.step()`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 11-slide-backprop-and-adamw.png

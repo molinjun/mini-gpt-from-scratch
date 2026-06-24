@@ -1,3 +1,34 @@
+---
+slide: 22
+title: "The Hidden Stream"
+section: "Tokenizer and Embedding"
+output: "22-slide-the-hidden-stream.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+The Hidden Stream
+
+Slide-visible text to render:
+- Hidden vectors flow through blocks
+- Each block refines the stream
+- Final vectors predict tokens
+
+Speaker-note intent, for context only:
+After embeddings, we have a stream of hidden vectors. Transformer blocks update this stream. At the end, the model converts the final vectors into scores for the next token.
+
+Visual direction:
+Horizontal river of vectors passing through repeated blocks.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 22-slide-the-hidden-stream.png

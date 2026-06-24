@@ -1,3 +1,34 @@
+---
+slide: 15
+title: "BPE vs Character Tokens"
+section: "Tokenizer and Embedding"
+output: "15-slide-bpe-vs-character-tokens.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+BPE vs Character Tokens
+
+Slide-visible text to render:
+- Production models use larger tokenizers
+- Mini-GPT uses character tokens
+- Same idea, smaller scale
+
+Speaker-note intent, for context only:
+Large GPT systems use tokenizers that split text into subwords. For Mini-GPT, we use character-level tokens. It is much smaller, but the idea is the same: text becomes token IDs.
+
+Visual direction:
+Two-column comparison: production tokenizer vs character tokenizer. Use `I love CIS` as example.
+
+Code snippet intent:
+Optional teaching mention: `tiktoken` for checking real tokenizer behavior, but no dependency in this deck.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 15-slide-bpe-vs-character-tokens.png

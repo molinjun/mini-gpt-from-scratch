@@ -1,3 +1,36 @@
+---
+slide: 02
+title: "Agenda"
+section: "Opening"
+output: "02-slide-agenda.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Agenda
+
+Slide-visible text to render:
+- Session 1: Why We Build Mini-GPT
+- Session 2: Neural Network Basics
+- Session 3: Tokenizer and Embedding
+- Session 4: Transformer Architecture
+- Session 5: Training and Inference
+
+Speaker-note intent, for context only:
+Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we cover the neural network basics we need for training. Third, we turn text into token IDs and vectors. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+
+Visual direction:
+Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Neural Network Basics, Tokenizer and Embedding, Transformer, Training and Inference. The tokenizer panel may show `I love CIS` token boxes, but should not show arbitrary numeric token IDs.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +77,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 02-slide-agenda.png

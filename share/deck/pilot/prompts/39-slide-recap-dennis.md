@@ -38,4 +38,4 @@ Avoid:
 - Paragraphs.
 - Too many numeric values.
 - Random tokens that distract from Denn -> Dennis.
-- Large token IDs such as 50256 or 100000.
+- Large production-model token IDs.

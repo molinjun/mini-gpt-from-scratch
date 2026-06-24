@@ -1,3 +1,34 @@
+---
+slide: 31
+title: "The MLP Block"
+section: "Transformer Architecture"
+output: "31-slide-the-mlp-block.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+The MLP Block
+
+Slide-visible text to render:
+- Attention mixes across tokens
+- MLP works inside each token
+- Linear -> ReLU -> Linear
+
+Speaker-note intent, for context only:
+Attention shares information across positions. The MLP then processes each position separately. In this teaching project, the MLP is Linear, ReLU, and Linear.
+
+Visual direction:
+Per-position MLP pipeline repeated under several token columns.
+
+Code snippet intent:
+PyTorch teaching snippet: `nn.Sequential(nn.Linear(n, 4*n), nn.ReLU(), nn.Linear(4*n, n))`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 31-slide-the-mlp-block.png

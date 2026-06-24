@@ -1,3 +1,37 @@
+---
+slide: 37
+title: "Sampling Loop"
+section: "Training and Inference"
+output: "37-slide-sampling-loop.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Sampling Loop
+
+Slide-visible text to render:
+- Use the latest context window
+- Convert logits to probabilities
+- Sample the next token
+
+Speaker-note intent, for context only:
+At each step, the model only needs the latest context window. It produces logits for the next token. We turn logits into probabilities and sample one token.
+
+Visual direction:
+Loop diagram: context, model, logits, probabilities, sampled token, append.
+
+Code snippet intent:
+PyTorch teaching snippet:
+`logits = model(context)[:, -1, :]`
+`probs = torch.softmax(logits / temperature, dim=-1)`
+`next_id = torch.multinomial(probs, 1)`
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +78,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 37-slide-sampling-loop.png

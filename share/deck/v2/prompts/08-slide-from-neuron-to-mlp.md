@@ -1,3 +1,34 @@
+---
+slide: 08
+title: "From Neuron to MLP"
+section: "Neural Network Basics"
+output: "08-slide-from-neuron-to-mlp.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+From Neuron to MLP
+
+Slide-visible text to render:
+- Many neurons form a layer
+- Layers create hidden features
+- MLP means Linear -> ReLU -> Linear
+
+Speaker-note intent, for context only:
+One neuron can fit a straight line. When the pattern is more complex, we use many neurons and layers. An MLP stacks linear layers with a nonlinearity between them. In the Transformer, this becomes the feed-forward part of each block.
+
+Visual direction:
+Start from one fitted line, then show a small MLP: input `x`, hidden features, ReLU gate, output `y_hat`. Add a small note: "later: Transformer MLP block".
+
+Code snippet intent:
+PyTorch teaching snippet: `nn.Sequential(nn.Linear(...), nn.ReLU(), nn.Linear(...))`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 08-slide-from-neuron-to-mlp.png

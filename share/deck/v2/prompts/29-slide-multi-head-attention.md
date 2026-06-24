@@ -1,3 +1,34 @@
+---
+slide: 29
+title: "Multi-Head Attention"
+section: "Transformer Architecture"
+output: "29-slide-multi-head-attention.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Multi-Head Attention
+
+Slide-visible text to render:
+- One head sees one relation pattern
+- Many heads learn different views
+- Outputs are joined together
+
+Speaker-note intent, for context only:
+One attention head can learn one kind of relation. Multi-head attention runs several heads in parallel. Then the outputs are joined and projected back to the model size.
+
+Visual direction:
+Several parallel attention heads merging into one output vector.
+
+Code snippet intent:
+None, or a shape-only note if needed.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 29-slide-multi-head-attention.png

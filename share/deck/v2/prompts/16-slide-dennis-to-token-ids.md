@@ -1,3 +1,36 @@
+---
+slide: 16
+title: "Dennis to Token IDs"
+section: "Tokenizer and Embedding"
+output: "16-slide-dennis-to-token-ids.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Dennis to Token IDs
+
+Slide-visible text to render:
+- Build a small vocabulary
+- Map each character to an ID
+- Encode and decode text
+
+Speaker-note intent, for context only:
+For a character tokenizer, we collect all characters in the data. Each character gets one ID. Encoding maps text to IDs, and decoding maps IDs back to text.
+
+Visual direction:
+`Dennis` split into character tokens `d e n n i s`, each connected to a small ID card: `d=4`, `e=5`, `n=14`, `i=9`, `s=19`. Add a compact label: `vocab_size = 27`, `token IDs: 0..26`.
+
+Code snippet intent:
+Teaching snippet:
+`stoi = {ch: i for i, ch in enumerate(chars)}`
+`encode = lambda s: [stoi[c] for c in s]`
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +77,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 16-slide-dennis-to-token-ids.png

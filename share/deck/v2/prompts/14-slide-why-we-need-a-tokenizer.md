@@ -1,3 +1,34 @@
+---
+slide: 14
+title: "Why We Need a Tokenizer"
+section: "Tokenizer and Embedding"
+output: "14-slide-why-we-need-a-tokenizer.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Why We Need a Tokenizer
+
+Slide-visible text to render:
+- Strings are symbols for humans
+- Models need integer IDs
+- IDs index into tables
+
+Speaker-note intent, for context only:
+A tokenizer turns text pieces into integer IDs. Those IDs are not meaning by themselves. They are indexes that let the model look up vectors later.
+
+Visual direction:
+`Dennis` -> token boxes -> ID boxes -> lookup table.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 14-slide-why-we-need-a-tokenizer.png

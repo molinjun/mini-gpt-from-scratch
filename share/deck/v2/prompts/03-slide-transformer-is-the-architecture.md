@@ -1,3 +1,34 @@
+---
+slide: 03
+title: "Transformer Is the Architecture"
+section: "Why We Build Mini-GPT"
+output: "03-slide-transformer-is-the-architecture.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Transformer Is the Architecture
+
+Slide-visible text to render:
+- Transformer powers modern AI
+- Attention Is All You Need, 2017
+- GPT predicts the next token
+
+Speaker-note intent, for context only:
+Transformer is one of the most important architectures behind modern AI models. The key paper is Attention Is All You Need. We will start from the big picture: tokens go into a Transformer architecture, the model reads the context, and a GPT-style model predicts the next token.
+
+Visual direction:
+Use the Transformer paper architecture as the main reference: show a simplified blueprint version of the original encoder-decoder figure, then highlight the decoder/GPT path. Add a small next-token example: `Denn` -> `i`. Include source chip: `arxiv.org/abs/1706.03762`.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 03-slide-transformer-is-the-architecture.png

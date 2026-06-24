@@ -1,3 +1,34 @@
+---
+slide: 07
+title: "One Neuron: y = Wx + b"
+section: "Neural Network Basics"
+output: "07-slide-one-neuron-y-wx-b.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+One Neuron: y = Wx + b
+
+Slide-visible text to render:
+- Multiply by `W`
+- Add bias
+- Produce one new number
+
+Speaker-note intent, for context only:
+A very small model is `y = W x + b`. The weight `W` controls the slope, and the bias `b` moves the line up or down. A neuron does the same idea, but often with many inputs.
+
+Visual direction:
+Equation-centered slide: `y = W x + b`, with a plot showing slope `W`, intercept `b`, and the predicted point `y_hat`.
+
+Code snippet intent:
+PyTorch teaching snippet: `nn.Linear(1, 1)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 07-slide-one-neuron-y-wx-b.png

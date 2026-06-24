@@ -1,3 +1,34 @@
+---
+slide: 32
+title: "Linear Head to Logits"
+section: "Transformer Architecture"
+output: "32-slide-linear-head-to-logits.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Linear Head to Logits
+
+Slide-visible text to render:
+- Logits are raw vocab scores
+- Softmax gives probabilities
+- Sampling picks the next token
+
+Speaker-note intent, for context only:
+At the end, a linear head maps the hidden vector back to vocabulary size. The output numbers are logits, which are raw scores before softmax. Softmax turns logits into probabilities, and sampling picks the next token.
+
+Visual direction:
+Hidden vector entering linear head, raw logit bars for character tokens, then softmax probability bars. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
+
+Code snippet intent:
+PyTorch teaching snippet: `logits = self.lm_head(x)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 32-slide-linear-head-to-logits.png

@@ -1,3 +1,34 @@
+---
+slide: 41
+title: "References"
+section: "Recap and References"
+output: "41-slide-references.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+References
+
+Slide-visible text to render:
+- Attention Is All You Need
+- Karpathy: microgpt, makemore, nanoGPT
+- 3Blue1Brown and Mu Li Transformer videos
+
+Speaker-note intent, for context only:
+These are useful references for going deeper. The original paper gives the architecture. Karpathy's projects are great for small GPT learning. The videos help build intuition.
+
+Visual direction:
+Showcase wall with paper card, code cards, and video cards. Keep URLs readable but short.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 41-slide-references.png

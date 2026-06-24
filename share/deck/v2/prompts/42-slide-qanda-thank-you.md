@@ -1,3 +1,33 @@
+---
+slide: 42
+title: "Q&A / Thank You"
+section: "Recap and References"
+output: "42-slide-qanda-thank-you.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Q&A / Thank You
+
+Slide-visible text to render:
+- Q&A
+- Thank you
+
+Speaker-note intent, for context only:
+Thank you. I am happy to take questions.
+
+Visual direction:
+Very simple closing slide with large `Q&A` and `Thank you`, dark blueprint background, small ECP CIS tag.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +74,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 42-slide-qanda-thank-you.png

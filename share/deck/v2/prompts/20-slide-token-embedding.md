@@ -1,3 +1,34 @@
+---
+slide: 20
+title: "Token Embedding"
+section: "Tokenizer and Embedding"
+output: "20-slide-token-embedding.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Token Embedding
+
+Slide-visible text to render:
+- Embedding is a lookup table
+- Each token gets a vector
+- The vectors are learned
+
+Speaker-note intent, for context only:
+An embedding layer is a table. When we pass token IDs into it, it returns one vector for each token. During training, the vectors change like other parameters.
+
+Visual direction:
+Embedding table with token IDs selecting vector rows.
+
+Code snippet intent:
+PyTorch teaching snippet: `tok_emb = nn.Embedding(vocab_size, n_embd)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 20-slide-token-embedding.png

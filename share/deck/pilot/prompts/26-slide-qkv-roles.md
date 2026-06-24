@@ -34,4 +34,4 @@ Avoid:
 - Personification or cartoon dating imagery.
 - Long paragraphs.
 - Extra formulas beyond the code snippet.
-- Generic words like "Machine" or unfamiliar sample text.
+- Unfamiliar sample text.

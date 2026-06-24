@@ -1,3 +1,34 @@
+---
+slide: 01
+title: "Build a Mini-GPT from Scratch"
+section: "Opening"
+output: "01-slide-build-a-mini-gpt-from-scratch.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Build a Mini-GPT from Scratch
+
+Slide-visible text to render:
+- Understand Transformer architecture and how it works
+- Build a tiny name generator
+- Speaker: Zhiqiang Ge, ECP CIS
+
+Speaker-note intent, for context only:
+Hello everyone. I am Zhiqiang Ge from ECP CIS. Today we will build a Mini-GPT from scratch. The goal is to understand the Transformer architecture with a small model we can explain step by step.
+
+Visual direction:
+Simple cover. Left side title, subtitle, speaker, and team. Render `Understand Transformer Architecture and How It Works` as a subtitle, not as a bullet list. Right side a compact token flow: `ECP CIS` -> `next token` -> `Awesome`.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 01-slide-build-a-mini-gpt-from-scratch.png

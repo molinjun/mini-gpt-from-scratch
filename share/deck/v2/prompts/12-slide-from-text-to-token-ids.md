@@ -1,3 +1,34 @@
+---
+slide: 12
+title: "From Text to Token IDs"
+section: "Tokenizer and Embedding"
+output: "12-slide-from-text-to-token-ids.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+From Text to Token IDs
+
+Slide-visible text to render:
+- Models do not read strings
+- Text must become numbers
+- Tokenizer builds that bridge
+
+Speaker-note intent, for context only:
+Now we can start the GPT path. The first problem is simple: the model cannot read strings like `Dennis`. It only reads numbers. The tokenizer is the bridge.
+
+Visual direction:
+Section divider: string text on one side, token ID boxes on the other.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 12-slide-from-text-to-token-ids.png

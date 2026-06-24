@@ -1,3 +1,34 @@
+---
+slide: 25
+title: "Attention Intuition"
+section: "Transformer Architecture"
+output: "25-slide-attention-intuition.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Attention Intuition
+
+Slide-visible text to render:
+- Each token looks at earlier tokens
+- Important tokens get more weight
+- The result is a mixed vector
+
+Speaker-note intent, for context only:
+Attention is a way for each position to look back at the context. Some earlier tokens matter more than others. The output is a weighted mix of useful information.
+
+Visual direction:
+Current token looking backward with weighted blue lines to earlier tokens.
+
+Code snippet intent:
+None.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 25-slide-attention-intuition.png

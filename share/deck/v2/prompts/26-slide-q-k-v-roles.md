@@ -1,3 +1,34 @@
+---
+slide: 26
+title: "Q, K, V Roles"
+section: "Transformer Architecture"
+output: "26-slide-q-k-v-roles.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Q, K, V Roles
+
+Slide-visible text to render:
+- Query asks what this token needs
+- Key describes each context token
+- Value carries information to mix
+
+Speaker-note intent, for context only:
+Q, K, and V are three learned projections of the same hidden vector. Use the familiar phrase `I love CIS`. When the current token is `CIS`, its Query asks what information it needs. The Keys describe the context tokens `I` and `love`. The Values carry the information that will be mixed.
+
+Visual direction:
+Three-panel diagram using the exact tokens `I love CIS`. Highlight current token `CIS`. Show Query from `CIS` matching Keys from `I`, `love`, and `CIS`, then Values carrying information into a mixed vector. Add a definition chip: "Q/K/V = learned projections". Use only project-specific sample text.
+
+Code snippet intent:
+PyTorch teaching snippet: `q, k, v = self.q(x), self.k(x), self.v(x)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 26-slide-q-k-v-roles.png

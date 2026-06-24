@@ -1,3 +1,34 @@
+---
+slide: 28
+title: "Causal Mask"
+section: "Transformer Architecture"
+output: "28-slide-causal-mask.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+Causal Mask
+
+Slide-visible text to render:
+- GPT must not see future tokens
+- The mask blocks future positions
+- Prediction stays honest
+
+Speaker-note intent, for context only:
+During training, the full sequence is available, but GPT should not look at future tokens. A causal mask blocks future positions, so each token only learns from the past.
+
+Visual direction:
+Attention matrix with upper triangle blocked out.
+
+Code snippet intent:
+PyTorch teaching snippet: `scores = scores.masked_fill(mask == 0, -inf)`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 28-slide-causal-mask.png

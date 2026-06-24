@@ -1,3 +1,34 @@
+---
+slide: 30
+title: "RMSNorm and Residuals"
+section: "Transformer Architecture"
+output: "30-slide-rmsnorm-and-residuals.png"
+references:
+  - ref_id: 01
+    filename: "../refs/01-ref-blueprint.png"
+    usage: style
+---
+
+Create one complete 16:9 presentation slide image.
+
+Slide title to render:
+RMSNorm and Residuals
+
+Slide-visible text to render:
+- Residual adds the old signal back
+- RMSNorm stabilizes the stream
+- Deep blocks become easier to train
+
+Speaker-note intent, for context only:
+Residual connections add the input back to the output of a layer. This helps information and gradients flow. RMSNorm keeps the hidden stream stable as it passes through many operations.
+
+Visual direction:
+Block diagram with main path and skip path, plus RMSNorm gate.
+
+Code snippet intent:
+Teaching snippet: `x = x + attention(norm(x))`.
+
+Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
 
 These rules are approved for the next production stages of the Mini-GPT deck.
@@ -44,3 +75,14 @@ These rules are approved for the next production stages of the Mini-GPT deck.
 - Recap should use `Recap: Dennis Through Mini-GPT`.
 - Training-loop slides should define `logits` and `gradient` directly on the slide.
 - Recap/tokenizer slides should show character-level tokens and small IDs.
+
+
+Rendering instructions:
+- Output is a single polished slide PNG.
+- Keep all visible text in English.
+- Use the approved dark blueprint style.
+- Use diagrams plus short definition chips where useful.
+- Keep text readable at presentation size.
+- Do not include slide numbers, logos, watermarks, or Chinese text.
+- Do not add unrelated examples, random tokens, or generic filler words.
+- Target output filename for the production batch: 30-slide-rmsnorm-and-residuals.png
