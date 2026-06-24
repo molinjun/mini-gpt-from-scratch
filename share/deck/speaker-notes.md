@@ -12,21 +12,29 @@ The goal is simple: use a small model to understand the Transformer architecture
 
 Let's get started.
 
-## 02 Why Build a Tiny GPT
+## 02 Transformer Is the Foundation
 
-Large GPT systems are impressive, but they are hard to study directly. There are too many parameters and too much training data.
+Before we build anything, let us set the map.
 
-A tiny GPT is not powerful, but it is very useful for learning. We can print the tensors. We can check the shapes. We can read the model code.
+Many modern AI models are based on the Transformer architecture. The Transformer was introduced in the paper Attention Is All You Need in 2017.
 
-So the small model becomes a microscope. It lets us see the same path that a larger GPT also uses: tokens become vectors, vectors move through Transformer blocks, and the model predicts the next token.
+For a GPT-style model, the main job is simple to say: read the tokens so far, and predict the next token.
 
-## 03 The Demo Target
+The paper link is on the slide, so you can find the original source after the talk.
 
-Here is the visible behavior we want. We give the model a short prefix, for example den.
+In this talk, we will see the pieces that make this possible.
 
-The model does not write the whole name in one step. It predicts one next character. Then we append that character and ask again.
+## 03 Why MicroGPT
 
-If the model samples n, then i, then s, and then the special stop token, we decode the result as dennis. This one-character loop is the main story for the whole talk.
+If we only talk about concepts, Transformer can feel too abstract.
+
+So we will use a small project and build it step by step. The project is inspired by Andrej Karpathy's MicroGPT code and makemore style.
+
+The model trains on about 32K names. After training, it can generate new name-like strings.
+
+The source links are on the slide, so you can explore the original code and dataset later.
+
+The task is small, but it contains the same path: tokens, Transformer blocks, logits, loss, and sampling.
 
 ## 04 A Neural Network Is a Function
 

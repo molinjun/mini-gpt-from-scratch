@@ -5,8 +5,8 @@ This directory is the single talk-ordered source for the presentation deck. The 
 ## Talk Order
 
 1. [Build a Mini-GPT from scratch](00-cover.md): Open the talk with a simple title page and set the topic.
-2. [Why Build a Tiny GPT](01-why-small.md): Explain why a tiny model is useful for learning.
-3. [The Demo Target](02-demo-target.md): Make the task concrete before theory.
+2. [Transformer Is the Foundation](01-transformer-next-token.md): Set the technical context: Transformer is the main architecture behind many modern AI models, and GPT-style models predict the next token.
+3. [Why MicroGPT](02-why-build-microgpt.md): Introduce the learning project: use a tiny MicroGPT-style name generator so the Transformer ideas become concrete.
 4. [A Neural Network Is a Function](03-function-view.md): Start from the simplest mental model of a neural network.
 5. [One Neuron](04-single-neuron.md): Explain weighted sum and activation with a small example.
 6. [From Neuron to MLP](05-mlp-stack.md): Show how many neurons become a small network.

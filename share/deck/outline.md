@@ -24,8 +24,8 @@ Reference style image: share/deck/refs/01-ref-blueprint.png
 | # | Title | Type | Layout | Visual Asset |
 |---|---|---|---|---|
 | 01 | Build a Mini-GPT from scratch | Cover | simple-title-cover | 01-slide-cover.png |
-| 02 | Why Build a Tiny GPT | Motivation | binary-comparison | 02-slide-why-small.png |
-| 03 | The Demo Target | Outcome | linear-progression | 03-slide-demo-target.png |
+| 02 | Transformer Is the Foundation | Context | source-rich-concept-flow | 02-slide-transformer-next-token.png |
+| 03 | Why MicroGPT | Project Setup | source-rich-project-pipeline | 03-slide-why-build-microgpt.png |
 | 04 | A Neural Network Is a Function | Neural Network Basics | linear-progression | 04-slide-function-view.png |
 | 05 | One Neuron | Neural Network Basics | hub-spoke | 05-slide-single-neuron.png |
 | 06 | From Neuron to MLP | Neural Network Basics | hierarchical-layers | 06-slide-mlp-stack.png |

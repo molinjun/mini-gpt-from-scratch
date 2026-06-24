@@ -7,13 +7,13 @@ This source is compiled from the talk-ordered files in `docs/`. The deck follows
 
 ## Narrative
 
-The talk starts from neural-network basics, builds up to a simple MLP, then explains tokenizer, embedding, Transformer blocks, QKV attention, training, and generation through a character-level name model.
+The talk first explains why Transformer and next-token prediction matter, then uses a tiny MicroGPT-style name generator to make the ideas concrete. From there it builds up from neural-network basics to tokenizer, embedding, Transformer blocks, QKV attention, training, and generation.
 
 ## Slide Sequence
 
 1. Build a Mini-GPT from scratch.
-2. Why Build a Tiny GPT.
-3. The Demo Target.
+2. Transformer Is the Foundation.
+3. Why MicroGPT.
 4. A Neural Network Is a Function.
 5. One Neuron.
 6. From Neuron to MLP.

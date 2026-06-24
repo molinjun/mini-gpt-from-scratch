@@ -22,8 +22,8 @@ Design aesthetic: dark technical blueprint, inspired by the provided reference i
 Background: deep navy to near-black grid, subtle engineering paper texture, no light theme.
 Palette: cyan #55d7ff, electric blue #2f80ed, deep navy #07182e, teal accents, small amber highlights only for warnings or targets.
 Typography: crisp sans-serif, high contrast, clear labels, all English text, no Chinese text.
-Visual elements: precise rectangular panels, 8px or smaller corner radius, thin technical strokes, orthogonal arrows, a few token boxes, a compact Transformer block, and a small logits/output mark.
-Density: minimal and presentation-friendly, with one simple visual message.
+Visual elements: precise rectangular panels, 8px or smaller corner radius, thin technical strokes, orthogonal arrows, matrix cells, tensor labels, small code-like tags.
+Density: detailed and educational, but each slide must have one main visual message.
 Style rules: no slide numbers, no logos, no decorative blobs, no stock photos, no blurry text, no extra unexplained labels.
 Reference style image: share/deck/refs/01-ref-blueprint.png
 </STYLE_INSTRUCTIONS>
@@ -32,15 +32,13 @@ Slide content:
 - Slide number for internal tracking only: 01
 - Filename: 01-slide-cover.png
 - Type: Cover
-- Layout: simple title cover
-- Narrative goal: Open the talk with a clean title page and set the topic.
+- Layout: simple-title-cover
+- Narrative goal: Open the talk with a simple title page and set the topic.
 - Headline text to render: "Build a Mini-GPT from scratch"
 - Supporting text to render: "Understand Transformer architecture and how it works."
-- Speaker text to render: "Molin"
-- Team text to render: "ECP CIS"
 - Small labels to render only where useful: tokens, Transformer block, next token
-- Visual description: A restrained blueprint-style Mini-GPT flow diagram: three or four token boxes enter a compact Transformer block stack, then an arrow points to one next-token output box.
-- Key points to show visually: tokens -> Transformer block -> next token
+- Visual description: A clean dark-blueprint cover with the title, subtitle, speaker, team, and a small Transformer flow diagram: tokens, a compact block stack, and next-token output.
+- Key points to show visually: Build a Mini-GPT from scratch | Understand Transformer architecture and how it works | Speaker: Molin | Team: ECP CIS
 
 Rendering instructions:
 - Build the slide around the visual description, not around a bullet list.

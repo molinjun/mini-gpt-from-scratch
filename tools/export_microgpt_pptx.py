@@ -465,7 +465,7 @@ def write_pptx(slides: list[dict]) -> None:
     missing = [
         str(image_path(slide))
         for slide in slides
-        if slide["n"] != 1 and not image_path(slide).exists()
+        if not image_path(slide).exists()
     ]
     if missing:
         print("Missing slide images:", file=sys.stderr)
@@ -495,16 +495,11 @@ def write_pptx(slides: list[dict]) -> None:
         pptx.writestr("ppt/theme/theme1.xml", theme_xml())
 
         for idx, slide in enumerate(slides, start=1):
-            if idx == 1:
-                pptx.writestr(f"ppt/slides/slide{idx}.xml", cover_slide_xml())
-                pptx.writestr(f"ppt/slides/_rels/slide{idx}.xml.rels", cover_slide_rels(idx))
-            else:
-                pptx.writestr(f"ppt/slides/slide{idx}.xml", slide_xml(idx, slide["title"]))
-                pptx.writestr(f"ppt/slides/_rels/slide{idx}.xml.rels", slide_rels(idx))
+            pptx.writestr(f"ppt/slides/slide{idx}.xml", slide_xml(idx, slide["title"]))
+            pptx.writestr(f"ppt/slides/_rels/slide{idx}.xml.rels", slide_rels(idx))
             pptx.writestr(f"ppt/notesSlides/notesSlide{idx}.xml", notes_xml(slide))
             pptx.writestr(f"ppt/notesSlides/_rels/notesSlide{idx}.xml.rels", notes_rels(idx))
-            if idx != 1:
-                pptx.write(image_path(slide), f"ppt/media/{media_name(idx)}")
+            pptx.write(image_path(slide), f"ppt/media/{media_name(idx)}")
 
 
 def main() -> None:
