@@ -21,16 +21,11 @@ Thanks for helping improve `mini-gpt-from-scratch`. This project is meant to sta
 
 ## Local Checks
 
-Run the lightweight syntax check before submitting changes:
-
-```bash
-python -m py_compile src/*.py
-```
-
-If your environment uses `python3`:
+Run the lightweight syntax and test checks before submitting changes:
 
 ```bash
 python3 -m py_compile src/*.py
+python3 -m unittest discover tests
 ```
 
 Preview the slide deck on macOS:
@@ -42,7 +37,7 @@ open share/slides/index.html
 Or serve it locally:
 
 ```bash
-python -m http.server 8000 -d share/slides
+python3 -m http.server 8000 -d share/slides
 ```
 
 ## Commit Messages

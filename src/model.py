@@ -261,9 +261,16 @@ def softmax_cross_entropy(logits: Tensor, targets: np.ndarray) -> Tensor:
     return out
 
 
-def gelu(x: Tensor) -> Tensor:
-    inner = math.sqrt(2.0 / math.pi) * (x + 0.044715 * (x**3))
-    return 0.5 * x * (1.0 + inner.tanh())
+def relu(x: Tensor) -> Tensor:
+    value = np.maximum(x.data, 0.0)
+    out = Tensor(value, (x,), "relu")
+
+    def backward() -> None:
+        if x.requires_grad:
+            x.grad += (x.data > 0.0) * out.grad
+
+    out._backward = backward
+    return out
 
 
 def causal_mask(size: int) -> np.ndarray:
@@ -318,18 +325,15 @@ class Embedding(Module):
         return out
 
 
-class LayerNorm(Module):
+class RMSNorm(Module):
     def __init__(self, n_embd: int, eps: float = 1e-5):
-        self.gamma = Parameter(np.ones(n_embd), "ln_gamma")
-        self.beta = Parameter(np.zeros(n_embd), "ln_beta")
+        self.weight = Parameter(np.ones(n_embd), "rms_weight")
         self.eps = eps
 
     def __call__(self, x: Tensor) -> Tensor:
-        mean = x.mean(axis=-1, keepdims=True)
-        centered = x - mean
-        var = (centered * centered).mean(axis=-1, keepdims=True)
-        normed = centered / ((var + self.eps) ** 0.5)
-        return self.gamma * normed + self.beta
+        mean_square = (x * x).mean(axis=-1, keepdims=True)
+        normed = x / ((mean_square + self.eps) ** 0.5)
+        return normed * self.weight
 
 
 class FeedForward(Module):
@@ -338,7 +342,7 @@ class FeedForward(Module):
         self.c_proj = Linear(4 * n_embd, n_embd, rng)
 
     def __call__(self, x: Tensor) -> Tensor:
-        return self.c_proj(gelu(self.c_fc(x)))
+        return self.c_proj(relu(self.c_fc(x)))
 
 
 class CausalSelfAttention(Module):
@@ -377,14 +381,14 @@ class CausalSelfAttention(Module):
 
 class TransformerBlock(Module):
     def __init__(self, n_embd: int, n_head: int, block_size: int, rng: np.random.Generator):
-        self.ln1 = LayerNorm(n_embd)
+        self.norm1 = RMSNorm(n_embd)
         self.attn = CausalSelfAttention(n_embd, n_head, block_size, rng)
-        self.ln2 = LayerNorm(n_embd)
+        self.norm2 = RMSNorm(n_embd)
         self.mlp = FeedForward(n_embd, rng)
 
     def __call__(self, x: Tensor) -> Tensor:
-        x = x + self.attn(self.ln1(x))
-        x = x + self.mlp(self.ln2(x))
+        x = x + self.attn(self.norm1(x))
+        x = x + self.mlp(self.norm2(x))
         return x
 
 
@@ -408,7 +412,7 @@ class MiniGPT(Module):
             TransformerBlock(config.n_embd, config.n_head, config.block_size, self.rng)
             for _ in range(config.n_layer)
         ]
-        self.ln_f = LayerNorm(config.n_embd)
+        self.norm_f = RMSNorm(config.n_embd)
         self.lm_head = Linear(config.n_embd, config.vocab_size, self.rng, bias=True)
 
     def forward(self, idx: np.ndarray, targets: np.ndarray | None = None) -> tuple[Tensor, Tensor | None]:
@@ -423,7 +427,7 @@ class MiniGPT(Module):
         x = self.token_embedding(idx) + self.position_embedding(positions)
         for block in self.blocks:
             x = block(x)
-        x = self.ln_f(x)
+        x = self.norm_f(x)
         logits = self.lm_head(x)
         loss = softmax_cross_entropy(logits, targets) if targets is not None else None
         return logits, loss

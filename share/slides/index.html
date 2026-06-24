@@ -1,1208 +1,513 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Build a Mini-GPT from Scratch - Molin</title>
+  <title>Build a Mini-GPT from scratch</title>
   <style>
-    :root {
-      --bg: #07182e;
-      --ink: #f5f9ff;
-      --muted: rgba(245, 249, 255, 0.76);
-      --line: rgba(85, 215, 255, 0.2);
-      --blue: #2f80ed;
-      --cyan: #55d7ff;
-      --amber: #d99000;
-      --rose: #b8326a;
-      --panel: rgba(255, 255, 255, 0.06);
-      --dark: #07182e;
-      --code: #0d1b2f;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-    }
-
-    body {
-      overflow: hidden;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(90, 170, 255, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(90, 170, 255, 0.055) 1px, transparent 1px);
-      background-size: 42px 42px;
-    }
-
-    .slide {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: clamp(1rem, 2vw, 1.8rem);
-      padding: clamp(2.4rem, 5vw, 5rem) clamp(2rem, 6vw, 6.2rem);
-      overflow: hidden;
-      color: var(--ink);
-      background:
-        linear-gradient(rgba(90, 170, 255, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(90, 170, 255, 0.055) 1px, transparent 1px),
-        radial-gradient(circle at 86% 12%, rgba(0, 151, 167, 0.24), transparent 24rem),
-        linear-gradient(135deg, #07182e, #0c1020 58%, #151729);
-      background-size: 42px 42px, 42px 42px, auto, auto;
-    }
-
-    .slide[hidden] {
-      display: none;
-    }
-
-    .slide.dark {
-      color: #f5f9ff;
-      background:
-        linear-gradient(rgba(90, 170, 255, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(90, 170, 255, 0.055) 1px, transparent 1px),
-        radial-gradient(circle at 86% 12%, rgba(0, 151, 167, 0.24), transparent 24rem),
-        linear-gradient(135deg, #07182e, #0c1020 58%, #151729);
-      background-size: 42px 42px, 42px 42px, auto, auto;
-    }
-
-    .kicker {
-      color: var(--blue);
-      font-size: clamp(0.78rem, 1.1vw, 0.98rem);
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .dark .kicker {
-      color: #55d7ff;
-    }
-
-    h1 {
-      max-width: 16ch;
-      font-size: clamp(3.4rem, 8vw, 8.4rem);
-      line-height: 0.95;
-      font-weight: 850;
-      letter-spacing: 0;
-    }
-
-    h2 {
-      font-size: clamp(2.2rem, 5vw, 5rem);
-      line-height: 1;
-      font-weight: 820;
-      letter-spacing: 0;
-    }
-
-    h3 {
-      font-size: clamp(1.15rem, 2.2vw, 2rem);
-      line-height: 1.1;
-      font-weight: 780;
-      letter-spacing: 0;
-    }
-
-    p,
-    li {
-      font-size: clamp(1rem, 1.65vw, 1.52rem);
-      line-height: 1.45;
-      color: var(--muted);
-    }
-
-    .dark p,
-    .dark li {
-      color: rgba(245, 249, 255, 0.78);
-    }
-
-    ul {
-      display: grid;
-      gap: 0.65rem;
-      list-style: none;
-    }
-
-    li {
-      position: relative;
-      padding-left: 1.35rem;
-    }
-
-    li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.62em;
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background: var(--cyan);
-    }
-
-    .dark li::before {
-      background: #55d7ff;
-    }
-
-    code,
-    pre {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    }
-
-    pre {
-      overflow: auto;
-      padding: 1.1rem 1.25rem;
-      border: 1px solid rgba(85, 215, 255, 0.24);
-      border-radius: 8px;
-      background: var(--code);
-      color: #f5f9ff;
-      font-size: clamp(0.78rem, 1.16vw, 1.05rem);
-      line-height: 1.55;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-    }
-
-    .layout {
-      min-height: 0;
-      display: grid;
-      align-items: center;
-      gap: clamp(1.4rem, 3vw, 3rem);
-    }
-
-    .two-col {
-      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    }
-
-    .wide-left {
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    }
-
-    .title-slide .wide-left {
-      grid-template-columns: minmax(0, 0.95fr) minmax(22rem, 1.05fr);
-    }
-
-    .title-slide h1 {
-      max-width: 11ch;
-      color: #f5f9ff;
-      font-size: clamp(3.15rem, 6.2vw, 6.45rem);
-    }
-
-    .paper-figure {
-      align-self: stretch;
-      min-height: 0;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: 0.65rem;
-      justify-items: center;
-    }
-
-    .paper-figure img {
-      width: auto;
-      max-width: 100%;
-      height: 100%;
-      min-height: 0;
-      object-fit: contain;
-      padding: clamp(0.8rem, 1.2vw, 1.1rem);
-      border: 1px solid rgba(85, 215, 255, 0.24);
-      border-radius: 8px;
-      background: #f7f7f2;
-      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.3);
-    }
-
-    .paper-caption {
-      color: rgba(245, 249, 255, 0.58);
-      font-size: clamp(0.68rem, 0.86vw, 0.82rem);
-      font-weight: 680;
-      line-height: 1.25;
-      text-align: center;
-    }
-
-    .stack {
-      display: grid;
-      gap: clamp(0.9rem, 1.6vw, 1.3rem);
-      align-content: center;
-    }
-
-    .lead {
-      max-width: 52rem;
-      font-size: clamp(1.15rem, 2vw, 1.85rem);
-      color: var(--muted);
-    }
-
-    .meta-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      border-top: 1px solid var(--line);
-      padding-top: 1.25rem;
-      color: var(--muted);
-      font-size: clamp(0.78rem, 1vw, 0.94rem);
-    }
-
-    .dark .meta-row {
-      border-color: rgba(245, 249, 255, 0.18);
-      color: rgba(245, 249, 255, 0.72);
-    }
-
-    .meta-row strong {
-      display: block;
-      margin-bottom: 0.35rem;
-      color: currentColor;
-      font-size: 0.76rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .asset {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: contain;
-      border: 1px solid rgba(0, 82, 204, 0.16);
-      border-radius: 8px;
-      background: #06152a;
-      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.28);
-    }
-
-    .dark .asset {
-      border-color: rgba(85, 215, 255, 0.22);
-      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.28);
-    }
-
-    .strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 2.1rem;
-      padding: 0.35rem 0.72rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--cyan);
-      background: rgba(255, 255, 255, 0.06);
-      font-weight: 760;
-      font-size: clamp(0.78rem, 1.05vw, 0.98rem);
-      white-space: nowrap;
-    }
-
-    .dark .tag {
-      border-color: rgba(85, 215, 255, 0.26);
-      background: rgba(255, 255, 255, 0.06);
-      color: #55d7ff;
-    }
-
-    .formula {
-      display: grid;
-      gap: 0.7rem;
-      padding: 1rem;
-      border-left: 4px solid var(--cyan);
-      background: rgba(85, 215, 255, 0.08);
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      color: var(--ink);
-      font-size: clamp(0.92rem, 1.35vw, 1.22rem);
-      line-height: 1.45;
-    }
-
-    .dark .formula {
-      background: rgba(85, 215, 255, 0.08);
-      color: #f5f9ff;
-    }
-
-    .mini-grid {
-      display: grid;
-      gap: 0.8rem;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .tile {
-      min-height: 7.2rem;
-      padding: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .tile strong {
-      display: block;
-      margin-bottom: 0.45rem;
-      color: var(--ink);
-      font-size: clamp(0.98rem, 1.35vw, 1.2rem);
-    }
-
-    .tile span {
-      color: var(--muted);
-      font-size: clamp(0.85rem, 1.1vw, 1rem);
-      line-height: 1.35;
-    }
-
-    .dark .tile {
-      border-color: rgba(85, 215, 255, 0.2);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .dark .tile strong {
-      color: #f5f9ff;
-    }
-
-    .dark .tile span {
-      color: rgba(245, 249, 255, 0.74);
-    }
-
-    .flow {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .flow-step {
-      min-height: 6.2rem;
-      display: grid;
-      place-items: center;
-      padding: 0.7rem;
-      border: 1px solid rgba(0, 82, 204, 0.18);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--ink);
-      text-align: center;
-      font-weight: 780;
-      font-size: clamp(0.84rem, 1.15vw, 1.02rem);
-      line-height: 1.25;
-    }
-
-    .arrow {
-      color: var(--cyan);
-      font-size: clamp(1.1rem, 2vw, 1.8rem);
-      text-align: center;
-      font-weight: 800;
-    }
-
-    .paper-transformer {
-      align-self: stretch;
-      min-height: 30rem;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 0.9rem;
-      padding: clamp(1rem, 1.7vw, 1.4rem);
-      border: 1px solid rgba(85, 215, 255, 0.24);
-      border-radius: 8px;
-      background:
-        linear-gradient(rgba(85, 215, 255, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(85, 215, 255, 0.045) 1px, transparent 1px),
-        rgba(255, 255, 255, 0.045);
-      background-size: 22px 22px;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 24px 54px rgba(0, 0, 0, 0.25);
-    }
-
-    .paper-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      color: #55d7ff;
-      font-size: clamp(0.78rem, 1vw, 0.92rem);
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .paper-title span:last-child {
-      color: rgba(245, 249, 255, 0.58);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-    }
-
-    .arch {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 1rem;
-      align-items: end;
-      min-height: 0;
-    }
-
-    .arch-column {
-      display: grid;
-      gap: 0.58rem;
-      align-content: end;
-      min-width: 0;
-    }
-
-    .arch-label {
-      color: rgba(245, 249, 255, 0.7);
-      font-size: clamp(0.72rem, 0.9vw, 0.84rem);
-      font-weight: 780;
-      letter-spacing: 0.1em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .arch-box {
-      min-height: 2.45rem;
-      display: grid;
-      place-items: center;
-      padding: 0.44rem 0.55rem;
-      border: 1px solid rgba(85, 215, 255, 0.24);
-      border-radius: 6px;
-      background: rgba(7, 24, 46, 0.72);
-      color: #f5f9ff;
-      text-align: center;
-      font-size: clamp(0.76rem, 1vw, 0.92rem);
-      font-weight: 760;
-      line-height: 1.16;
-    }
-
-    .arch-box.accent {
-      border-color: rgba(217, 144, 0, 0.52);
-      background: rgba(217, 144, 0, 0.12);
-      color: #ffd98a;
-    }
-
-    .arch-box.cyan {
-      border-color: rgba(85, 215, 255, 0.5);
-      background: rgba(85, 215, 255, 0.1);
-      color: #b8efff;
-    }
-
-    .arch-stack {
-      position: relative;
-      display: grid;
-      gap: 0.5rem;
-      padding: 0.72rem;
-      border: 1px solid rgba(85, 215, 255, 0.32);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .arch-stack::before {
-      content: "N×";
-      position: absolute;
-      top: -0.72rem;
-      right: 0.72rem;
-      padding: 0.1rem 0.42rem;
-      border: 1px solid rgba(85, 215, 255, 0.28);
-      border-radius: 999px;
-      background: #07182e;
-      color: #55d7ff;
-      font-size: 0.72rem;
-      font-weight: 850;
-    }
-
-    .arch-arrow {
-      color: #55d7ff;
-      text-align: center;
-      font-size: 1rem;
-      line-height: 1;
-      font-weight: 850;
-    }
-
-    .arch-footer {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 0.6rem;
-      align-items: center;
-      color: rgba(245, 249, 255, 0.56);
-      font-size: clamp(0.72rem, 0.88vw, 0.84rem);
-      font-weight: 720;
-      text-align: center;
-    }
-
-    .prob-bars {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.75rem;
-      align-items: end;
-      min-height: 13rem;
-      padding: 1rem;
-      border-bottom: 2px solid var(--line);
-    }
-
-    .bar {
-      display: grid;
-      align-content: end;
-      gap: 0.55rem;
-      height: 100%;
-      color: var(--muted);
-      text-align: center;
-      font-weight: 740;
-    }
-
-    .bar::before {
-      content: "";
-      display: block;
-      height: var(--h);
-      border-radius: 8px 8px 0 0;
-      background: linear-gradient(180deg, var(--cyan), var(--blue));
-    }
-
-    .references {
-      display: grid;
-      gap: 0.75rem;
-      color: var(--muted);
-      font-size: clamp(0.94rem, 1.35vw, 1.2rem);
-      line-height: 1.4;
-    }
-
-    .slide-number {
-      align-self: end;
-      color: var(--muted);
-      font-size: 0.82rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .dark .slide-number {
-      color: rgba(245, 249, 255, 0.56);
-    }
-
-    .speaker-notes {
-      display: none;
-    }
-
-    .presenter-toggle {
-      position: fixed;
-      right: 1rem;
-      bottom: 1rem;
-      z-index: 20;
-      border: 1px solid rgba(0, 82, 204, 0.2);
-      border-radius: 8px;
-      padding: 0.55rem 0.75rem;
-      background: rgba(7, 24, 46, 0.86);
-      color: var(--ink);
-      font: inherit;
-      font-size: 0.8rem;
-      font-weight: 720;
-      cursor: pointer;
-      opacity: 0.36;
-      transition: opacity 160ms ease, transform 160ms ease;
-    }
-
-    .presenter-toggle:hover,
-    .presenter-toggle:focus-visible {
-      opacity: 1;
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .presenter-message {
-      position: fixed;
-      right: 1rem;
-      bottom: 4rem;
-      z-index: 20;
-      max-width: min(24rem, calc(100vw - 2rem));
-      padding: 0.7rem 0.85rem;
-      border-radius: 8px;
-      background: rgba(16, 24, 40, 0.92);
-      color: #fff;
-      font-size: 0.86rem;
-      line-height: 1.35;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(0.35rem);
-      transition: opacity 160ms ease, transform 160ms ease;
-    }
-
-    .presenter-message.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 900px) {
-      .slide {
-        padding: 2rem 1.2rem;
-      }
-
-      .two-col,
-      .wide-left {
-        grid-template-columns: 1fr;
-      }
-
-      .asset {
-        max-height: 38vh;
-      }
-
-      .meta-row,
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .title-slide .wide-left,
-      .flow {
-        grid-template-columns: 1fr;
-      }
-
-      .paper-transformer {
-        min-height: 0;
-      }
-
-      .arrow {
-        transform: rotate(90deg);
-      }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; background: #07182e; color: #f5f9ff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; overflow: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(rgba(85,215,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(85,215,255,.055) 1px, transparent 1px); background-size: 42px 42px; pointer-events: none; }
+    .slide { width: 100vw; height: 100vh; display: grid; place-items: center; padding: min(3vw, 2rem); }
+    .slide[hidden] { display: none; }
+    .slide img { width: min(100%, calc(100vh * 16 / 9)); height: min(100%, calc(100vw * 9 / 16)); object-fit: contain; border: 1px solid rgba(85,215,255,.22); border-radius: 8px; box-shadow: 0 24px 54px rgba(0,0,0,.36); background: #07182e; }
+    .slide-frame { width: min(100%, calc(100vh * 16 / 9)); height: min(100%, calc(100vw * 9 / 16)); aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid rgba(85,215,255,.22); border-radius: 8px; box-shadow: 0 24px 54px rgba(0,0,0,.36); background: #07182e; }
+    .cover-frame { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(18rem, .72fr); align-items: center; gap: 4rem; padding: 5rem; isolation: isolate; }
+    .cover-frame::before { content: ""; position: absolute; inset: 0; z-index: -2; background: linear-gradient(rgba(85,215,255,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(85,215,255,.07) 1px, transparent 1px), linear-gradient(135deg, #07182e 0%, #061426 62%, #04101f 100%); background-size: 40px 40px, 40px 40px, auto; }
+    .cover-frame::after { content: ""; position: absolute; inset: 2rem; z-index: -1; border: 1px solid rgba(85,215,255,.38); border-radius: 8px; pointer-events: none; }
+    .cover-copy,
+    .cover-visual { position: relative; z-index: 1; }
+    .cover-title { margin: 0; max-width: 48rem; color: #f5f9ff; font-size: 5.2rem; line-height: .98; font-weight: 800; letter-spacing: 0; }
+    .cover-title strong { color: #55d7ff; font-weight: 800; }
+    .cover-subtitle { margin: 1.45rem 0 0; max-width: 40rem; color: rgba(172,231,255,.92); font-size: 1.7rem; line-height: 1.28; letter-spacing: 0; }
+    .cover-meta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 3rem; color: rgba(245,249,255,.86); font-size: 1.05rem; line-height: 1; letter-spacing: 0; }
+    .cover-meta span { display: inline-flex; align-items: center; min-height: 2.35rem; padding: 0 .85rem; border: 1px solid rgba(85,215,255,.34); border-radius: 6px; background: rgba(7,24,46,.72); }
+    .cover-visual { display: grid; gap: 1rem; align-content: center; min-height: 25rem; color: #ace7ff; }
+    .cover-visual-label { margin: 0; color: rgba(172,231,255,.72); font-size: .78rem; font-weight: 700; letter-spacing: 0; }
+    .token-row,
+    .output-row { display: flex; align-items: center; gap: .55rem; }
+    .token-row span,
+    .output-token { display: grid; place-items: center; width: 3.25rem; height: 3rem; border: 1px solid #19d7f4; border-radius: 6px; background: rgba(6,21,40,.86); color: #f5f9ff; font-size: 1.25rem; font-weight: 700; box-shadow: inset 0 0 18px rgba(47,128,237,.2); }
+    .flow-line { width: 1px; height: 1.8rem; margin-left: 6.65rem; background: #55d7ff; box-shadow: 0 0 18px rgba(85,215,255,.52); }
+    .transformer-mini { display: grid; gap: .55rem; padding: 1rem; border: 1px solid rgba(85,215,255,.7); border-radius: 8px; background: rgba(6,21,40,.78); box-shadow: inset 0 0 34px rgba(47,128,237,.18); }
+    .block-line { display: grid; place-items: center; height: 2.45rem; border: 1px solid rgba(85,215,255,.58); border-radius: 6px; background: linear-gradient(90deg, rgba(47,128,237,.24), rgba(85,215,255,.1)); color: #f5f9ff; font-size: .9rem; font-weight: 700; letter-spacing: 0; }
+    .output-row { gap: 1rem; }
+    .output-token { width: 4.7rem; color: #55d7ff; }
+    .logit-mark { display: flex; align-items: end; gap: .22rem; height: 2.6rem; padding: .2rem .35rem; border: 1px solid rgba(85,215,255,.3); border-radius: 6px; }
+    .logit-mark span { display: block; width: .45rem; background: #2f80ed; border-radius: 3px 3px 0 0; }
+    .logit-mark span:nth-child(1) { height: 38%; }
+    .logit-mark span:nth-child(2) { height: 70%; }
+    .logit-mark span:nth-child(3) { height: 48%; }
+    .logit-mark span:nth-child(4) { height: 88%; background: #55d7ff; }
+    .logit-mark span:nth-child(5) { height: 56%; }
+    .speaker-notes { display: none; }
+    .hud { position: fixed; left: 1rem; bottom: 1rem; z-index: 5; color: rgba(245,249,255,.72); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; }
+    .controls { position: fixed; left: 50%; bottom: .75rem; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: .5rem; padding: .35rem; border: 1px solid rgba(85,215,255,.24); border-radius: 8px; background: rgba(4,15,30,.76); box-shadow: 0 18px 36px rgba(0,0,0,.28); backdrop-filter: blur(12px); }
+    .deck-button,
+    .presenter-toggle { border: 1px solid rgba(85,215,255,.35); border-radius: 8px; background: rgba(7,24,46,.9); color: #f5f9ff; min-width: 4.8rem; height: 2.25rem; padding: 0 .75rem; font: inherit; font-size: .82rem; cursor: pointer; }
+    .deck-button:hover,
+    .presenter-toggle:hover { border-color: rgba(85,215,255,.72); background: rgba(11,39,73,.96); }
+    .deck-button:focus-visible,
+    .presenter-toggle:focus-visible { outline: 2px solid #55d7ff; outline-offset: 2px; }
+    .deck-button:disabled { opacity: .42; cursor: default; }
+    .deck-button[aria-pressed="true"] { background: rgba(85,215,255,.2); border-color: rgba(85,215,255,.78); }
+    .presenter-toggle { position: fixed; right: 1rem; bottom: 1rem; z-index: 5; }
+    .notes-panel { position: fixed; top: 1rem; right: 1rem; z-index: 7; display: none; width: min(28rem, calc(100vw - 2rem)); max-height: calc(100vh - 5rem); overflow: auto; padding: 1rem; border: 1px solid rgba(85,215,255,.32); border-radius: 8px; background: rgba(5,16,31,.94); box-shadow: 0 24px 54px rgba(0,0,0,.38); backdrop-filter: blur(14px); }
+    .notes-panel.is-open { display: block; }
+    .notes-title { margin: 0 0 .65rem; color: #55d7ff; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .notes-body { margin: 0; color: rgba(245,249,255,.9); font-size: 1rem; line-height: 1.5; white-space: pre-wrap; }
+    @media (max-width: 1000px) {
+      .cover-frame { grid-template-columns: 1fr; gap: 2rem; padding: 3rem; }
+      .cover-title { font-size: 3.6rem; }
+      .cover-subtitle { font-size: 1.25rem; }
+      .cover-meta { margin-top: 1.8rem; }
+      .cover-visual { min-height: 15rem; }
+      .flow-line { margin-left: 6.4rem; }
+    }
+    @media (max-width: 760px) {
+      .slide { padding-bottom: 4.5rem; }
+      .slide-frame { height: auto; }
+      .cover-frame { grid-template-columns: minmax(0, 1fr) minmax(8rem, .8fr); gap: .85rem; padding: 1rem; }
+      .cover-frame::after { inset: .55rem; border-radius: 6px; }
+      .cover-title { max-width: 12rem; font-size: 1.45rem; line-height: 1.04; }
+      .cover-subtitle { max-width: 12rem; margin-top: .45rem; font-size: .66rem; line-height: 1.25; }
+      .cover-meta { gap: .35rem; margin-top: .7rem; font-size: .52rem; }
+      .cover-meta span { min-height: 1.1rem; padding: 0 .35rem; border-radius: 4px; }
+      .cover-visual { gap: .35rem; min-height: 0; }
+      .cover-visual-label { font-size: .45rem; }
+      .token-row,
+      .output-row { gap: .25rem; }
+      .token-row span,
+      .output-token { width: 1.35rem; height: 1.2rem; border-radius: 4px; font-size: .52rem; }
+      .flow-line { height: .55rem; margin-left: 2.8rem; }
+      .transformer-mini { gap: .2rem; padding: .35rem; border-radius: 6px; }
+      .block-line { height: .8rem; border-radius: 4px; font-size: .38rem; }
+      .output-token { width: 1.9rem; }
+      .logit-mark { gap: .08rem; height: 1rem; padding: .08rem .12rem; border-radius: 4px; }
+      .logit-mark span { width: .16rem; border-radius: 2px 2px 0 0; }
+      .hud { left: .75rem; bottom: 4rem; }
+      .controls { width: calc(100vw - 1.5rem); justify-content: center; }
+      .deck-button,
+      .presenter-toggle { min-width: 0; flex: 1 1 auto; padding: 0 .55rem; }
+      .presenter-toggle { right: .75rem; bottom: .75rem; width: calc((100vw - 2rem) / 4); }
     }
   </style>
 </head>
-
 <body>
-  <button class="presenter-toggle" type="button" aria-label="Open presenter notes" title="Open presenter notes (P)">
-    Presenter
-  </button>
-  <div class="presenter-message" role="status" aria-live="polite"></div>
-
-  <section class="slide dark title-slide">
-    <div class="kicker">Infra . ECP .CIS</div>
-    <div class="layout wide-left">
-      <div class="stack">
-        <h1>Build a Mini-GPT from Scratch</h1>
-        <p class="lead">Understanding Transformer architecture and mechanics.</p>
-        <div class="strip">
-          <span class="tag">Tokenizer</span>
-          <span class="tag">Embedding</span>
-          <span class="tag">Attention</span>
-          <span class="tag">RMSNorm + ReLU</span>
+  <section class="slide cover-slide" data-title="Build a Mini-GPT from scratch">
+    <div class="slide-frame cover-frame" role="img" aria-label="Build a Mini-GPT from scratch cover with a simple Transformer flow diagram">
+      <div class="cover-copy">
+        <h1 class="cover-title">Build a <strong>Mini-GPT</strong><br>from scratch</h1>
+        <p class="cover-subtitle">Understand Transformer architecture and how it works.</p>
+        <div class="cover-meta" aria-label="Speaker and team">
+          <span>Speaker: Molin</span>
+          <span>Team: ECP CIS</span>
         </div>
       </div>
-      <div class="paper-figure">
-        <img src="../deck/attention-paper-transformer.png" alt="Figure 1 from Attention Is All You Need: Transformer model architecture">
-        <div class="paper-caption">Figure 1 from Vaswani et al., Attention Is All You Need, 2017.</div>
-      </div>
-    </div>
-    <div class="meta-row">
-      <div><strong>Speaker</strong>Molin</div>
-      <div><strong>Team</strong>Infra . ECP .CIS</div>
-      <div><strong>Reference</strong>Karpathy microGPT / makemore lineage</div>
-    </div>
-    <div class="speaker-notes">
-      Today we start from the Transformer architecture and then shrink it into a tiny name generator. The model is small, but the path is complete: tokenizer, embedding, attention, MLP, loss, backpropagation, Adam, and sampling. Once this miniature version is clear, the core mechanics of Transformer models become much easier to inspect.
-    </div>
-  </section>
 
-  <section class="slide">
-    <div class="kicker">01 / Goal</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>Train a name generator</h2>
-        <p class="lead">Train a character-level GPT on roughly 3k English names, then sample new names one character at a time.</p>
-        <ul>
-          <li>The task is small enough to inspect layer by layer.</li>
-          <li>The pipeline still covers both training and inference.</li>
-          <li>The goal is mechanical clarity, not production quality.</li>
-        </ul>
-      </div>
-      <img class="asset" src="../deck/01-slide-training-flow.png" alt="Mini-GPT training and generation pipeline">
-    </div>
-    <div class="slide-number">Slide 02 / 12</div>
-    <div class="speaker-notes">
-      We shrink the problem down to name generation. Names are short and the dataset is small, but the model still has to learn statistical structure: common prefixes, letter combinations, endings, and sequence boundaries. That makes the task tiny enough to inspect while still complete enough to cover the core GPT architecture.
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="kicker">02 / Neural Network Basics</div>
-    <div class="layout wide-left">
-      <div class="stack">
-        <h2>A Transformer is still a model</h2>
-        <p class="lead">It is still a trainable function: inputs, parameters, outputs, loss, gradients, and updates.</p>
-        <div class="formula">
-          <span>y_hat = model(x, parameters)</span>
-          <span>loss = error(y_hat, y)</span>
-          <span>parameters = Adam(parameters, gradients)</span>
+      <div class="cover-visual" aria-hidden="true">
+        <p class="cover-visual-label">tokens</p>
+        <div class="token-row">
+          <span>d</span>
+          <span>e</span>
+          <span>n</span>
+          <span>n</span>
         </div>
-      </div>
-      <div class="mini-grid">
-        <div class="tile"><strong>Neuron</strong><span>A weighted sum followed by a nonlinear activation.</span></div>
-        <div class="tile"><strong>MLP</strong><span>Stacked neurons that compute inside each token position.</span></div>
-        <div class="tile"><strong>Backprop</strong><span>Chain rule machinery for finding how each parameter should move.</span></div>
-        <div class="tile"><strong>Adam</strong><span>Momentum and variance estimates for steadier parameter updates.</span></div>
-      </div>
-    </div>
-    <div class="slide-number">Slide 03 / 12</div>
-    <div class="speaker-notes">
-      A Transformer sounds special, but it is not outside neural networks. It is still a function with inputs, parameters, outputs, and a loss. Backpropagation computes gradients, and an optimizer updates the parameters. The clever part is the function shape: attention lets token positions communicate, while the MLP computes within each position.
-    </div>
-  </section>
-
-  <section class="slide dark">
-    <div class="kicker">03 / Tokenizer</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>Text must become token ids</h2>
-        <ul>
-          <li>Models process numbers, not raw strings.</li>
-          <li>micro-gpt uses a character-level `CharTokenizer`.</li>
-          <li>A char tokenizer is simple, reversible, and ideal for teaching.</li>
-          <li>ChatGPT-style systems use much larger token vocabularies.</li>
-        </ul>
-        <pre><code>tok.fit("emma\nolivia")
-ids = tok.encode("emma")
-text = tok.decode(ids)</code></pre>
-      </div>
-      <img class="asset" src="../deck/02-slide-tokenizer-comparison.png" alt="Character tokenizer compared with subword-style tokenizer">
-    </div>
-    <div class="slide-number">Slide 04 / 12</div>
-    <div class="speaker-notes">
-      The tokenizer is the boundary between language and matrices. In micro-gpt, we deliberately use a primitive character tokenizer because it hides almost nothing. Larger models use more sophisticated tokenizers so common text fragments can become single tokens. OpenAI's tiktoken material also emphasizes that GPT models see tokens, and token counts affect context length and cost.
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="kicker">04 / Embedding</div>
-    <div class="layout wide-left">
-      <div class="stack">
-        <h2>Ids become vectors</h2>
-        <p class="lead">An embedding is a learned table. Each token id selects one vector row, and each position selects another.</p>
-        <pre><code>positions = np.arange(T)[None, :]
-x = token_embedding(idx) + position_embedding(positions)</code></pre>
-      </div>
-      <div class="mini-grid">
-        <div class="tile"><strong>Token embedding</strong><span>Answers: what symbol is this?</span></div>
-        <div class="tile"><strong>Position embedding</strong><span>Answers: where is it in the context?</span></div>
-        <div class="tile"><strong>Hidden state</strong><span>All later blocks operate on these vectors.</span></div>
-        <div class="tile"><strong>Shape</strong><span>(batch, time) -> (batch, time, channels)</span></div>
-      </div>
-    </div>
-    <div class="slide-number">Slide 05 / 12</div>
-    <div class="speaker-notes">
-      Embedding is not a dictionary lookup for meaning. It gives each token a continuous coordinate that can be trained. At initialization, those vectors are nearly random. As loss falls, useful statistical relationships are written into the vectors.
-    </div>
-  </section>
-
-  <section class="slide dark">
-    <div class="kicker">05 / Transformer Architecture</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>Decoder-only GPT</h2>
-        <p class="lead">Each block repeats two jobs: communication + computation.</p>
-        <ul>
-          <li>Attention lets each position read prior context.</li>
-          <li>The MLP transforms the information at each position.</li>
-          <li>Residual paths let each layer edit the existing stream.</li>
-          <li>The causal mask prevents looking into the future.</li>
-        </ul>
-      </div>
-      <img class="asset" src="../deck/03-slide-transformer-overview-v2.png" alt="Decoder-only Mini-GPT Transformer architecture">
-    </div>
-    <div class="slide-number">Slide 06 / 12</div>
-    <div class="speaker-notes">
-      GPT is a decoder-only Transformer that predicts the next token from left to right. Each block has two jobs: attention communicates across positions, and the MLP computes within each position. Residual connections make every layer an edit to the stream rather than a replacement.
-    </div>
-  </section>
-
-  <section class="slide dark">
-    <div class="kicker">06 / Attention</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>Q/K/V: content lookup</h2>
-        <pre><code>q = x @ Wq
-k = x @ Wk
-v = x @ Wv
-
-scores = q @ k.T / sqrt(head_dim)
-weights = softmax(mask(scores))
-out = weights @ v</code></pre>
-        <p>Query asks what this position wants. Key advertises what each position contains. Value carries the information that gets mixed.</p>
-      </div>
-      <img class="asset" src="../deck/04-slide-attention-mechanism.png" alt="Causal self-attention Q K V and mask diagram">
-    </div>
-    <div class="slide-number">Slide 07 / 12</div>
-    <div class="speaker-notes">
-      Attention can be understood as content lookup. The current position produces a query, prior positions provide keys, and the information to mix is carried in values. Softmax turns scores into weights. The mask is essential: position t can only read positions up to t.
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="kicker">07 / Multi-head + MLP</div>
-    <div class="layout wide-left">
-      <div class="stack">
-        <h2>Multiple heads read different relations</h2>
-        <p class="lead">Multi-head attention splits channels into separate subspaces so each head can learn a different dependency pattern.</p>
-        <pre><code>(B, T, C) -> (B, H, T, D) -> (B, T, C)</code></pre>
-      </div>
-      <div class="mini-grid">
-        <div class="tile"><strong>Head 1</strong><span>May focus on local spelling rhythm.</span></div>
-        <div class="tile"><strong>Head 2</strong><span>May focus on vowel and consonant patterns.</span></div>
-        <div class="tile"><strong>Head 3</strong><span>May focus on name-ending conventions.</span></div>
-        <div class="tile"><strong>MLP</strong><span>Computes C -> 4C -> C inside each position.</span></div>
-      </div>
-    </div>
-    <div class="slide-number">Slide 08 / 12</div>
-    <div class="speaker-notes">
-      A single attention head reads context through one relation space. Multi-head attention adds parallelism: different heads can learn different relationships, then merge back into the residual stream. After attention, the MLP no longer communicates across tokens; it computes independently at each position.
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="kicker">08 / Linear &amp; Norm</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>RMSNorm + ReLU</h2>
-        <ul>
-          <li>Linear is the basic trainable transform: `y = xW + b`.</li>
-          <li>Q/K/V, output projection, and MLP layers all depend on Linear.</li>
-          <li>RMSNorm rescales by root mean square without subtracting the mean.</li>
-          <li>ReLU is the most direct nonlinearity: `max(0, x)`.</li>
-        </ul>
-      </div>
-      <div class="stack">
-        <div class="formula">
-          <span>rms(x) = sqrt(mean(x^2) + eps)</span>
-          <span>norm(x) = x / rms(x) * weight</span>
-          <span>relu(x) = max(0, x)</span>
+        <div class="flow-line"></div>
+        <p class="cover-visual-label">Transformer block</p>
+        <div class="transformer-mini">
+          <div class="block-line">attention</div>
+          <div class="block-line">MLP</div>
+          <div class="block-line">RMSNorm</div>
         </div>
-        <p>Note: the current source still contains `LayerNorm` + `GELU`. This deck explains the target micro-gpt version with RMSNorm + ReLU.</p>
-      </div>
-    </div>
-    <div class="slide-number">Slide 09 / 12</div>
-    <div class="speaker-notes">
-      Normalization stabilizes the scale entering each layer. LayerNorm subtracts the mean and divides by standard deviation; RMSNorm is simpler and controls scale through root mean square. ReLU is easy to explain: negative values are clipped, positive values pass through. For a teaching-oriented micro-gpt, this keeps attention on the Transformer structure itself.
-    </div>
-  </section>
-
-  <section class="slide">
-    <div class="kicker">09 / Softmax Output</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>From logits to the next character</h2>
-        <ul>
-          <li>The linear head projects hidden states to vocabulary size.</li>
-          <li>Logits are unnormalized scores.</li>
-          <li>Softmax turns scores into a probability distribution.</li>
-          <li>Cross-entropy penalizes low probability on the correct token.</li>
-        </ul>
-        <div class="formula">
-          <span>prob_i = exp(logit_i) / sum_j exp(logit_j)</span>
-          <span>loss = -log(prob_target)</span>
-        </div>
-      </div>
-      <div class="stack">
-        <h3>prefix: mar</h3>
-        <div class="prob-bars" aria-label="next token probability chart">
-          <div class="bar" style="--h: 84%;">a</div>
-          <div class="bar" style="--h: 62%;">i</div>
-          <div class="bar" style="--h: 48%;">y</div>
-          <div class="bar" style="--h: 35%;">o</div>
-          <div class="bar" style="--h: 18%;">&lt;end&gt;</div>
+        <div class="flow-line"></div>
+        <p class="cover-visual-label">next token</p>
+        <div class="output-row">
+          <div class="output-token">i</div>
+          <div class="logit-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="slide-number">Slide 10 / 12</div>
-    <div class="speaker-notes">
-      The model does not output a full name at once. It outputs a probability distribution for the next character. During training, the correct answer is known, so cross-entropy pushes probability onto the target. During generation, we sample one character, append it to the context, and repeat.
-    </div>
+    <div class="speaker-notes">Hello everyone. I am Molin from ECP CIS.
+
+Today we will talk about how to build a Mini-GPT from scratch.
+
+The goal is simple: use a small model to understand the Transformer architecture and how it works.
+
+Let's get started.</div>
   </section>
 
-  <section class="slide">
-    <div class="kicker">10 / Recap + References + QA</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h2>One through-line: next-token prediction</h2>
-        <div class="flow">
-          <div class="flow-step">names</div>
-          <div class="arrow">→</div>
-          <div class="flow-step">ids</div>
-          <div class="arrow">→</div>
-          <div class="flow-step">logits</div>
-        </div>
-        <ul>
-          <li>Tokenizer: text -> ids</li>
-          <li>Embedding: ids -> vectors</li>
-          <li>Transformer: context -> hidden states</li>
-          <li>Softmax: logits -> probabilities</li>
-        </ul>
-      </div>
-      <div class="stack references">
-        <h3>References</h3>
-        <span>Andrej Karpathy: micrograd, makemore, nanoGPT, Let's build GPT</span>
-        <span>Paper: Attention Is All You Need</span>
-        <span>OpenAI Cookbook: How to count tokens with tiktoken</span>
-        <span>Repo: `docs/`, `src/model.py`, `src/train.py`</span>
-        <h3>QA prompts</h3>
-        <span>Why can a tiny model explain a large model? What is the core difference between attention and MLPs? What tradeoffs does tokenization create?</span>
-      </div>
-    </div>
-    <div class="slide-number">Slide 11 / 12</div>
-    <div class="speaker-notes">
-      If there is one idea to remember, it is this: GPT is a next-token predictor. All the complicated structure serves one goal: at the current position, use the prior context to assign better probabilities to the next token. This is also a natural entry point for QA: tiny versus large models, attention versus MLPs, and tokenizer tradeoffs.
-    </div>
+  <section class="slide" data-title="Why Build a Tiny GPT">
+    <img src="../deck/02-slide-why-small.png" alt="Why Build a Tiny GPT">
+    <div class="speaker-notes">Large GPT systems are impressive, but they are hard to study directly. There are too many parameters and too much training data.
+
+A tiny GPT is not powerful, but it is very useful for learning. We can print the tensors. We can check the shapes. We can read the model code.
+
+So the small model becomes a microscope. It lets us see the same path that a larger GPT also uses: tokens become vectors, vectors move through Transformer blocks, and the model predicts the next token.</div>
   </section>
 
-  <section class="slide dark">
-    <div class="kicker">11 / Thank You</div>
-    <div class="layout two-col">
-      <div class="stack">
-        <h1>Thank You</h1>
-        <p class="lead">The best way to understand GPT is to train one small enough to inspect.</p>
-        <pre><code>python -m py_compile src/*.py
-python src/train.py</code></pre>
-      </div>
-      <div class="mini-grid">
-        <div class="tile"><strong>Try</strong><span>change block size, heads, layers</span></div>
-        <div class="tile"><strong>Compare</strong><span>char tokenizer vs subword tokenizer</span></div>
-        <div class="tile"><strong>Swap</strong><span>LayerNorm/GELU -> RMSNorm/ReLU</span></div>
-        <div class="tile"><strong>Inspect</strong><span>shapes, gradients, generated names</span></div>
-      </div>
-    </div>
-    <div class="meta-row">
-      <div><strong>Speaker</strong>Molin</div>
-      <div><strong>Source</strong>docs/</div>
-      <div><strong>Deck</strong>share/slides/index.html</div>
-    </div>
-    <div class="speaker-notes">
-      Thank you. The most valuable part of this project is not the generated names; it is that every layer can be opened and inspected. You can see how shapes change, how gradients return, and how parameters update. The best way to understand GPT is to train one small enough to see.
-    </div>
+  <section class="slide" data-title="The Demo Target">
+    <img src="../deck/03-slide-demo-target.png" alt="The Demo Target">
+    <div class="speaker-notes">Here is the visible behavior we want. We give the model a short prefix, for example den.
+
+The model does not write the whole name in one step. It predicts one next character. Then we append that character and ask again.
+
+If the model samples n, then i, then s, and then the special stop token, we decode the result as dennis. This one-character loop is the main story for the whole talk.</div>
   </section>
 
+  <section class="slide" data-title="A Neural Network Is a Function">
+    <img src="../deck/04-slide-function-view.png" alt="A Neural Network Is a Function">
+    <div class="speaker-notes">Before we say Transformer, let us start with a simple idea. A neural network is a function.
+
+The input is a group of numbers. The function has parameters, also called weights. The output is another group of numbers.
+
+For our Mini-GPT, the output numbers are scores for possible next characters. At first these scores are bad. Training changes the parameters so the scores become more useful.</div>
+  </section>
+
+  <section class="slide" data-title="One Neuron">
+    <img src="../deck/05-slide-single-neuron.png" alt="One Neuron">
+    <div class="speaker-notes">A single neuron is a very small computation. It takes several input numbers, multiplies them by weights, and adds the results.
+
+Then it usually applies a nonlinearity. In this project, the MLP uses ReLU. ReLU is simple: negative values become zero, positive values stay positive.
+
+One neuron is not enough for GPT, but it gives us the basic building block: weighted information plus a simple nonlinear step.</div>
+  </section>
+
+  <section class="slide" data-title="From Neuron to MLP">
+    <img src="../deck/06-slide-mlp-stack.png" alt="From Neuron to MLP">
+    <div class="speaker-notes">When we place many neurons side by side, we get a layer. When we stack layers, we get a small neural network called an MLP.
+
+In our Mini-GPT block, the MLP is Linear, then ReLU, then Linear. It does not talk across time. It works inside each token position.
+
+This is important. Attention is the part that reads other positions. The MLP is the part that computes new features at the current position.</div>
+  </section>
+
+  <section class="slide" data-title="Prediction and Loss">
+    <img src="../deck/07-slide-prediction-loss.png" alt="Prediction and Loss">
+    <div class="speaker-notes">The model outputs logits. Logits are raw scores. They are not probabilities yet.
+
+Softmax turns these scores into probabilities. If the true next character is n, then a good model gives high probability to n.
+
+Cross-entropy loss is high when the correct character has low probability. It is low when the correct character has high probability. So loss gives us one number to improve.</div>
+  </section>
+
+  <section class="slide" data-title="Backprop and Update">
+    <img src="../deck/08-slide-backprop-update.png" alt="Backprop and Update">
+    <div class="speaker-notes">Training is not mysterious. We run the model, compute loss, compute gradients, and update the parameters.
+
+Backpropagation tells each parameter how it affected the loss. AdamW uses those gradients to move the parameter a small amount.
+
+After many updates, the model becomes less surprised by real training examples. In our case, it becomes better at predicting the next character in a name.</div>
+  </section>
+
+  <section class="slide" data-title="Names as Tiny Documents">
+    <img src="../deck/09-slide-name-data.png" alt="Names as Tiny Documents">
+    <div class="speaker-notes">Now we connect the neural network to the data. In a MicroGPT-style name model, each name is a tiny document.
+
+We add a special token called BOS. It can mean beginning of sequence, and in this small project it also marks the end.
+
+So the name dennis becomes BOS, d, e, n, n, i, s, BOS. This one sequence creates many next-character training examples.</div>
+  </section>
+
+  <section class="slide" data-title="The Next-Token Task">
+    <img src="../deck/10-slide-next-token-task.png" alt="The Next-Token Task">
+    <div class="speaker-notes">The next-token task is made by shifting the sequence by one step.
+
+The input row might be BOS, d, e, n. The target row is d, e, n, n. At each position, the model predicts the next character.
+
+This is very efficient for learning. One short name gives many small prediction tasks. The Transformer learns from all positions at the same time.</div>
+  </section>
+
+  <section class="slide" data-title="What a Tokenizer Does">
+    <img src="../deck/11-slide-tokenizer-idea.png" alt="What a Tokenizer Does">
+    <div class="speaker-notes">A tokenizer is the boundary between human text and model input.
+
+The model cannot read the string directly. The tokenizer splits the text into tokens, maps each token to an integer id, and can later decode ids back into text.
+
+For our small model, tokens are characters. For large GPT systems, tokens are often pieces of words. The idea is the same: text becomes ids.</div>
+  </section>
+
+  <section class="slide" data-title="Tokenizer Example: I love CIS">
+    <img src="../deck/12-slide-tiktoken-example.png" alt="Tokenizer Example: I love CIS">
+    <div class="speaker-notes">Let us use the text I love CIS. A production GPT tokenizer, such as tiktoken, may split this into word pieces. For example, I, space-love, and space-CIS may be separate tokens depending on the vocabulary.
+
+Our Mini-GPT tokenizer is simpler. It splits the same text into characters.
+
+The split is different, but the final interface is the same. The model receives integer ids. It does not receive the original text string.</div>
+  </section>
+
+  <section class="slide" data-title="Character Tokenizer: Dennis">
+    <img src="../deck/13-slide-char-tokenizer-dennis.png" alt="Character Tokenizer: Dennis">
+    <div class="speaker-notes">For the name Dennis, we lowercase it for the tiny model and treat each character as a token.
+
+The wrapped sequence is BOS, d, e, n, n, i, s, BOS. Each symbol has an id from the tokenizer vocabulary.
+
+This is simple enough to test directly. If we encode and then decode a name, we should get the same name back, except for the special tokens we choose to add or remove.</div>
+  </section>
+
+  <section class="slide" data-title="Token IDs Are Not Meaning">
+    <img src="../deck/14-slide-ids-are-not-meaning.png" alt="Token IDs Are Not Meaning">
+    <div class="speaker-notes">A very common mistake is to think token ids have meaning by themselves.
+
+They do not. If d has id 4 and n has id 14, that does not mean n is ten units away from d in a useful language space.
+
+The id is just an address. It chooses a row in an embedding table. The vector in that row is what the model will learn and use.</div>
+  </section>
+
+  <section class="slide" data-title="Token Embedding">
+    <img src="../deck/15-slide-token-embedding.png" alt="Token Embedding">
+    <div class="speaker-notes">The token embedding table has one row for each token in the vocabulary.
+
+When the model sees token id 4, it selects row 4 from the table. That row is a vector. The vector length is the model dimension.
+
+At the start, these vectors are random. During training, the vectors move so useful character patterns become easier for the Transformer to compute.</div>
+  </section>
+
+  <section class="slide" data-title="Position Embedding">
+    <img src="../deck/16-slide-position-embedding.png" alt="Position Embedding">
+    <div class="speaker-notes">A token embedding tells the model what symbol it is. But the model also needs to know where the symbol is.
+
+In the prefix denn, the two n characters have the same token id. Without position information, they would start with the same vector.
+
+So Mini-GPT adds a position embedding. Token vector plus position vector becomes the first hidden state for each position.</div>
+  </section>
+
+  <section class="slide" data-title="The Hidden Stream">
+    <img src="../deck/17-slide-hidden-stream.png" alt="The Hidden Stream">
+    <div class="speaker-notes">After token and position embeddings are added, the model has a hidden stream.
+
+The shape is B, T, D. B is batch size. T is the number of positions. D is the vector size.
+
+Each position has its own vector. The Transformer block will update these vectors. Attention lets positions share information. The MLP computes new features inside each position.</div>
+  </section>
+
+  <section class="slide" data-title="MicroGPT Decoder-Only Map">
+    <img src="../deck/18-slide-decoder-only-map.png" alt="MicroGPT Decoder-Only Map">
+    <div class="speaker-notes">Now we can look at the full MicroGPT-style architecture.
+
+It is decoder-only. That means there is no separate encoder. The model reads the previous tokens and predicts the next token.
+
+The path is simple to say: token ids become embeddings, embeddings pass through repeated Transformer blocks, a final norm prepares the vectors, and a linear head produces logits for the next token.</div>
+  </section>
+
+  <section class="slide" data-title="Inside One Transformer Block">
+    <img src="../deck/19-slide-block-map.png" alt="Inside One Transformer Block">
+    <div class="speaker-notes">A Transformer block has two main jobs.
+
+First, attention lets one position read information from earlier positions. Second, the MLP computes new features inside each position.
+
+RMSNorm helps keep vector scale stable. Residual connections add the new information back to the old stream. This makes the model easier to train and easier to think about.</div>
+  </section>
+
+  <section class="slide" data-title="Attention Intuition">
+    <img src="../deck/20-slide-attention-intuition.png" alt="Attention Intuition">
+    <div class="speaker-notes">Attention is easier to understand as content lookup.
+
+Imagine the final n in the prefix denn. To predict the next character, it may need to read earlier context. It can look left at d, e, and the previous n.
+
+Attention gives the model a learned way to score those visible positions and mix their information into the current vector.</div>
+  </section>
+
+  <section class="slide" data-title="Q, K, V Roles">
+    <img src="../deck/21-slide-qkv-roles.png" alt="Q, K, V Roles">
+    <div class="speaker-notes">For each position, the model makes three vectors: query, key, and value.
+
+The query is like a question from the current position: what information do I need? The key is like a description of each visible position: what do I contain?
+
+The value is the information that will be sent if that position is useful. Q and K decide the attention weights. V is what gets mixed.</div>
+  </section>
+
+  <section class="slide" data-title="Attention Scores">
+    <img src="../deck/22-slide-attention-scores.png" alt="Attention Scores">
+    <div class="speaker-notes">The attention score is usually made with a dot product between query and key.
+
+If the query and key match well, the score is high. If they do not match, the score is low.
+
+Then the causal mask blocks future positions. Finally, softmax turns the visible scores into weights. Those weights decide how much value information will be mixed into the current position.</div>
+  </section>
+
+  <section class="slide" data-title="QKV Animation Plan">
+    <img src="../deck/23-slide-qkv-animation-plan.png" alt="QKV Animation Plan">
+    <div class="speaker-notes">This slide is a clear plan for the QKV animation.
+
+First, each hidden vector is projected into Q, K, and V. Second, the current query compares with the keys from visible positions. Third, the mask removes future positions. Fourth, the final weights mix the value vectors.
+
+Even if we show it as an animation, the idea is still simple: ask, match, block the future, and mix useful information.</div>
+  </section>
+
+  <section class="slide" data-title="Causal Mask">
+    <img src="../deck/24-slide-causal-mask.png" alt="Causal Mask">
+    <div class="speaker-notes">During training, we give the model a whole window of tokens. Without a mask, a position could look at the answer on its right.
+
+That would be cheating. GPT must learn to predict from the past, because during generation the future does not exist yet.
+
+The causal mask solves this. Each position can read itself and earlier positions, but it cannot read later positions.</div>
+  </section>
+
+  <section class="slide" data-title="Multi-Head Attention">
+    <img src="../deck/25-slide-multi-head.png" alt="Multi-Head Attention">
+    <div class="speaker-notes">Multi-head attention means the model runs several attention operations in parallel.
+
+Each head gets part of the vector channels. One head might learn local spelling rhythm. Another might learn likely endings. Another might notice repeated letters like n n.
+
+After the heads read context in different ways, their outputs are merged back into one vector stream.</div>
+  </section>
+
+  <section class="slide" data-title="RMSNorm and Residuals">
+    <img src="../deck/26-slide-rmsnorm-residual.png" alt="RMSNorm and Residuals">
+    <div class="speaker-notes">RMSNorm and residual connections are not the flashiest parts, but they matter.
+
+RMSNorm keeps vector scale under control before attention or the MLP. The residual connection adds the new result back to the old stream.
+
+This means each block can make an edit instead of replacing everything. That makes deep stacks easier to train.</div>
+  </section>
+
+  <section class="slide" data-title="The MLP Inside the Block">
+    <img src="../deck/27-slide-mlp-in-block.png" alt="The MLP Inside the Block">
+    <div class="speaker-notes">Now the earlier MLP idea comes back.
+
+Inside each Transformer block, after attention has shared information, the MLP computes new features at each position. It uses Linear, ReLU, and Linear.
+
+The same MLP weights are applied to every position. So attention is communication across positions, while the MLP is computation inside each position.</div>
+  </section>
+
+  <section class="slide" data-title="Linear Head to Logits">
+    <img src="../deck/28-slide-linear-head.png" alt="Linear Head to Logits">
+    <div class="speaker-notes">After the Transformer blocks, the model still has one vector for each position.
+
+A final linear head maps each vector from model dimension D to vocabulary size V. That gives one logit score for each possible next token.
+
+During generation, we usually read the logits at the final position. Those logits tell us what the model thinks the next token could be.</div>
+  </section>
+
+  <section class="slide" data-title="Training Loop in Code">
+    <img src="../deck/29-slide-training-loop-code.png" alt="Training Loop in Code">
+    <div class="speaker-notes">Now the code should look familiar.
+
+The training loop gets a batch of token ids and targets. It runs the model forward. It computes the loss. Then it clears old gradients, runs backward, and calls the optimizer step.
+
+This is the same loop we saw near the beginning. The only difference is that now the function is a Transformer instead of a simple MLP.</div>
+  </section>
+
+  <section class="slide" data-title="Sampling Loop">
+    <img src="../deck/30-slide-sampling-loop.png" alt="Sampling Loop">
+    <div class="speaker-notes">Generation is not a new model. It reuses the same forward pass.
+
+We start from BOS or from a prompt like den. We crop the context if it is longer than block size. We run the model and read the logits at the last position.
+
+Then we sample one token, append it, and repeat. When the model samples BOS again, we stop and decode the name.</div>
+  </section>
+
+  <section class="slide" data-title="What to Inspect">
+    <img src="../deck/31-slide-what-to-inspect.png" alt="What to Inspect">
+    <div class="speaker-notes">The best part of a tiny implementation is visibility.
+
+We can test that the tokenizer round-trips text correctly. We can print shapes like B, T, and D. We can inspect the causal mask. We can watch loss go down and samples become more name-like.
+
+This habit is useful even when working with larger systems. Always connect the concept to something you can check.</div>
+  </section>
+
+  <section class="slide" data-title="Recap">
+    <img src="../deck/32-slide-recap.png" alt="Recap">
+    <div class="speaker-notes">Let us recap the whole path.
+
+A neural network is a trainable function. Our tokenizer turns text into ids. Embeddings turn ids and positions into vectors. Transformer blocks update those vectors. Attention lets positions read earlier context. The linear head produces logits, and sampling turns logits into new characters.
+
+That is the core idea of GPT, shown in a tiny model we can inspect.</div>
+  </section>
+  <div class="hud" aria-live="polite"></div>
+  <div class="controls" role="group" aria-label="Slide controls">
+    <button class="deck-button prev-button" type="button">Prev</button>
+    <button class="deck-button next-button" type="button">Next</button>
+    <button class="deck-button notes-toggle" type="button" aria-controls="notes-panel" aria-expanded="false">Notes</button>
+  </div>
+  <aside class="notes-panel" id="notes-panel" aria-label="Speaker notes" aria-live="polite">
+    <div class="notes-title"></div>
+    <p class="notes-body"></p>
+  </aside>
+  <button class="presenter-toggle" type="button">Presenter</button>
   <script>
     const slides = Array.from(document.querySelectorAll(".slide"));
+    const hud = document.querySelector(".hud");
+    const prevButton = document.querySelector(".prev-button");
+    const nextButton = document.querySelector(".next-button");
+    const notesToggle = document.querySelector(".notes-toggle");
+    const notesPanel = document.querySelector(".notes-panel");
+    const notesTitle = document.querySelector(".notes-title");
+    const notesBody = document.querySelector(".notes-body");
     const presenterToggle = document.querySelector(".presenter-toggle");
-    const presenterMessage = document.querySelector(".presenter-message");
-    const deckStyles = Array.from(document.querySelectorAll("style"))
-      .map((style) => style.textContent)
-      .join("\n");
-    let currentSlide = 0;
+    let current = 0;
     let presenterWindow = null;
-    let messageTimer = null;
 
-    function getSlideNotes(index) {
-      const notes = slides[index].querySelector(".speaker-notes");
-      return notes ? notes.textContent.trim() : "";
+    function notes(index) {
+      return slides[index].querySelector(".speaker-notes")?.textContent.trim() || "";
     }
 
-    function showSlide(index) {
-      currentSlide = Math.max(0, Math.min(index, slides.length - 1));
-      slides.forEach((slide, slideIndex) => {
-        slide.hidden = slideIndex !== currentSlide;
-      });
+    function show(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.hidden = i !== current);
+      hud.textContent = "Slide " + (current + 1) + " / " + slides.length;
+      prevButton.disabled = current === 0;
+      nextButton.disabled = current === slides.length - 1;
+      notesTitle.textContent = "Slide " + (current + 1) + " Notes";
+      notesBody.textContent = notes(current);
       updatePresenter();
     }
 
-    function presenterStyles() {
-      return deckStyles + `
-        :root {
-          --presenter-bg: #101114;
-          --presenter-panel: #1a1d24;
-          --presenter-text: #f5f7fb;
-          --presenter-muted: #a6adbb;
-          --presenter-border: #303542;
-          --presenter-accent: #55d7ff;
-        }
-
-        body {
-          margin: 0;
-          min-height: 100vh;
-          background: var(--presenter-bg);
-          color: var(--presenter-text);
-          display: grid;
-          grid-template-rows: auto 1fr;
-        }
-
-        body::before {
-          display: none;
-        }
-
-        header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-          padding: 1rem 1.25rem;
-          border-bottom: 1px solid var(--presenter-border);
-          color: var(--presenter-muted);
-          font-size: 0.9rem;
-        }
-
-        main {
-          display: grid;
-          grid-template-columns: minmax(22rem, 1fr) minmax(20rem, 0.85fr);
-          gap: 1rem;
-          padding: 1rem;
-          min-height: 0;
-        }
-
-        .preview,
-        .notes {
-          background: var(--presenter-panel);
-          border: 1px solid var(--presenter-border);
-          border-radius: 8px;
-          overflow: hidden;
-        }
-
-        .preview {
-          display: grid;
-          place-items: center;
-          padding: 1rem;
-        }
-
-        .preview-frame {
-          width: min(100%, 72rem);
-          aspect-ratio: 16 / 9;
-          border: 1px solid var(--presenter-border);
-          background: white;
-          overflow: hidden;
-        }
-
-        .preview-frame .slide {
-          width: 100%;
-          height: 100%;
-          transform-origin: top left;
-        }
-
-        .preview-frame .speaker-notes {
-          display: none;
-        }
-
-        .notes {
-          padding: 1.25rem;
-          overflow: auto;
-        }
-
-        .notes h1 {
-          max-width: none;
-          margin: 0 0 1rem;
-          font-size: 1rem;
-          color: var(--presenter-accent);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .notes p {
-          margin: 0;
-          font-size: clamp(1.2rem, 2.2vw, 2rem);
-          line-height: 1.45;
-          color: var(--presenter-text);
-          white-space: pre-wrap;
-        }
-      `;
-    }
-
-    function buildPresenterWindow() {
-      const doc = presenterWindow.document;
-      doc.open();
-      doc.close();
-      doc.title = "Speaker Notes";
-
-      const viewport = doc.createElement("meta");
-      viewport.name = "viewport";
-      viewport.content = "width=device-width, initial-scale=1.0";
-      doc.head.appendChild(viewport);
-
-      const style = doc.createElement("style");
-      style.textContent = presenterStyles();
-      doc.head.appendChild(style);
-
-      const header = doc.createElement("header");
-      const title = doc.createElement("strong");
-      const counter = doc.createElement("span");
-      title.textContent = "Presenter View";
-      counter.id = "counter";
-      header.append(title, counter);
-
-      const main = doc.createElement("main");
-      const previewSection = doc.createElement("section");
-      const notesSection = doc.createElement("section");
-      const preview = doc.createElement("div");
-      const notesTitle = doc.createElement("h1");
-      const notes = doc.createElement("p");
-
-      previewSection.className = "preview";
-      notesSection.className = "notes";
-      preview.className = "preview-frame";
-      preview.id = "preview";
-      notesTitle.textContent = "Speaker Notes";
-      notes.id = "notes";
-
-      previewSection.appendChild(preview);
-      notesSection.append(notesTitle, notes);
-      main.append(previewSection, notesSection);
-      doc.body.append(header, main);
-    }
-
-    function updatePresenter() {
-      if (!presenterWindow || presenterWindow.closed) return;
-
-      const doc = presenterWindow.document;
-      const preview = doc.getElementById("preview");
-      const notes = doc.getElementById("notes");
-      const counter = doc.getElementById("counter");
-
-      if (!preview || !notes || !counter) return;
-
-      const slideClone = slides[currentSlide].cloneNode(true);
-      slideClone.hidden = false;
-      slideClone.querySelectorAll(".speaker-notes").forEach((node) => node.remove());
-
-      preview.replaceChildren(slideClone);
-      notes.textContent = getSlideNotes(currentSlide) || "No notes for this slide.";
-      counter.textContent = "Slide " + (currentSlide + 1) + " / " + slides.length;
-    }
-
-    function showPresenterMessage(message) {
-      presenterMessage.textContent = message;
-      presenterMessage.classList.add("is-visible");
-      window.clearTimeout(messageTimer);
-      messageTimer = window.setTimeout(() => {
-        presenterMessage.classList.remove("is-visible");
-      }, 3600);
+    function toggleNotes(forceOpen) {
+      const open = typeof forceOpen === "boolean" ? forceOpen : !notesPanel.classList.contains("is-open");
+      notesPanel.classList.toggle("is-open", open);
+      notesToggle.setAttribute("aria-expanded", String(open));
+      notesToggle.setAttribute("aria-pressed", String(open));
     }
 
     function openPresenter() {
       if (!presenterWindow || presenterWindow.closed) {
         presenterWindow = window.open("", "mini-gpt-presenter", "width=1280,height=720");
-        if (!presenterWindow) {
-          showPresenterMessage("Presenter window was blocked. Allow pop-ups, or click Presenter again.");
-          return;
-        }
-        buildPresenterWindow();
+        if (!presenterWindow) return;
+        presenterWindow.document.write('<!DOCTYPE html><html><head><title>Speaker Notes</title><style id="deck-style"></style><style>body{margin:0;background:#101114;color:#f5f7fb;font-family:system-ui,sans-serif;display:grid;grid-template-columns:1fr 1fr;height:100vh}.preview{display:grid;place-items:center;padding:1rem;background:#07182e}.preview img{max-width:100%;max-height:100%;object-fit:contain}.preview .slide-frame{width:100%;height:auto;max-height:100%;box-shadow:none}.preview .cover-frame{padding:2rem;gap:1.25rem}.preview .cover-title{font-size:2.2rem}.preview .cover-subtitle{font-size:1rem}.preview .cover-meta{margin-top:1rem;font-size:.68rem}.preview .cover-visual{min-height:12rem;gap:.45rem}.preview .cover-visual-label{font-size:.52rem}.preview .token-row span,.preview .output-token{width:1.85rem;height:1.55rem;font-size:.72rem}.preview .flow-line{height:.9rem;margin-left:3.75rem}.preview .transformer-mini{padding:.55rem;gap:.28rem}.preview .block-line{height:1.15rem;font-size:.52rem}.preview .logit-mark{height:1.35rem}.notes{padding:2rem;overflow:auto;border-left:1px solid #303542}.notes h1{color:#55d7ff;font-size:1rem;letter-spacing:0;text-transform:uppercase}.notes p{font-size:1.35rem;line-height:1.5;white-space:pre-wrap}</style></head><body><div class="preview"></div><div class="notes"><h1>Speaker Notes</h1><p></p></div></body></html>');
+        presenterWindow.document.querySelector("#deck-style").textContent = document.querySelector("style")?.textContent || "";
       }
-
       presenterWindow.focus();
       updatePresenter();
     }
 
-    presenterToggle.addEventListener("click", openPresenter);
+    function updatePresenter() {
+      if (!presenterWindow || presenterWindow.closed) return;
+      const sourceFrame = slides[current].querySelector(".slide-frame");
+      if (sourceFrame) {
+        presenterWindow.document.querySelector(".preview").replaceChildren(sourceFrame.cloneNode(true));
+        presenterWindow.document.querySelector(".notes p").textContent = notes(current);
+        return;
+      }
+      const sourceImg = slides[current].querySelector("img");
+      const img = sourceImg.cloneNode();
+      img.src = sourceImg.src;
+      presenterWindow.document.querySelector(".preview").replaceChildren(img);
+      presenterWindow.document.querySelector(".notes p").textContent = notes(current);
+    }
 
     document.addEventListener("keydown", (event) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
-
-      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
-        event.preventDefault();
-        showSlide(currentSlide + 1);
-      }
-
-      if (event.key === "ArrowLeft" || event.key === "PageUp") {
-        event.preventDefault();
-        showSlide(currentSlide - 1);
-      }
-
-      if (event.key.toLowerCase() === "p" || event.code === "KeyP") {
-        event.preventDefault();
-        openPresenter();
-      }
-
-      if (event.key === "Home") {
-        event.preventDefault();
-        showSlide(0);
-      }
-
-      if (event.key === "End") {
-        event.preventDefault();
-        showSlide(slides.length - 1);
-      }
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") { event.preventDefault(); show(current + 1); }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") { event.preventDefault(); show(current - 1); }
+      if (event.key === "Home") { event.preventDefault(); show(0); }
+      if (event.key === "End") { event.preventDefault(); show(slides.length - 1); }
+      if (event.key.toLowerCase() === "p") { event.preventDefault(); openPresenter(); }
+      if (event.key.toLowerCase() === "n") { event.preventDefault(); toggleNotes(); }
+      if (event.key === "Escape") { toggleNotes(false); }
     });
-
-    showSlide(0);
+    prevButton.addEventListener("click", () => show(current - 1));
+    nextButton.addEventListener("click", () => show(current + 1));
+    notesToggle.addEventListener("click", () => toggleNotes());
+    presenterToggle.addEventListener("click", openPresenter);
+    show(0);
   </script>
 </body>
-
 </html>

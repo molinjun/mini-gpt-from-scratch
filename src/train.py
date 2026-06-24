@@ -4,20 +4,50 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+from typing import Sequence
 
 import numpy as np
 
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from src.model import MiniGPT, MiniGPTConfig, Parameter, softmax  # noqa: E402
+from src.model import MiniGPT, MiniGPTConfig, Parameter  # noqa: E402
 from src.tokenizer import CharTokenizer  # noqa: E402
 
 
-DEFAULT_TEXT = (
-    "Mini-GPT learns by predicting the next character. "
-    "Attention lets each token look backward through context. "
+DEFAULT_NAMES = (
+    "emma",
+    "olivia",
+    "ava",
+    "isabella",
+    "sophia",
+    "charlotte",
+    "mia",
+    "amelia",
+    "harper",
+    "evelyn",
+    "abigail",
+    "emily",
+    "ella",
+    "elizabeth",
+    "camila",
+    "luna",
+    "sofia",
+    "avery",
+    "mila",
+    "aria",
+    "scarlett",
+    "penelope",
+    "layla",
+    "chloe",
+    "victoria",
+    "madison",
+    "eleanor",
+    "grace",
+    "nora",
+    "riley",
 )
+DEFAULT_NAMES_PATH = Path(__file__).resolve().parents[1] / "data" / "names.txt"
 
 
 def get_batch(data: np.ndarray, batch_size: int, block_size: int, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
@@ -27,6 +57,27 @@ def get_batch(data: np.ndarray, batch_size: int, block_size: int, rng: np.random
     x = np.stack([data[i : i + block_size] for i in starts])
     y = np.stack([data[i + 1 : i + block_size + 1] for i in starts])
     return x, y
+
+
+def load_names(path: str | Path | None = None) -> list[str]:
+    """Load one-name-per-line data, falling back to a tiny built-in sample."""
+
+    data_path = Path(path) if path is not None else DEFAULT_NAMES_PATH
+    if data_path.exists():
+        lines = data_path.read_text(encoding="utf-8").splitlines()
+        names = [line.strip().lower() for line in lines if line.strip()]
+        if names:
+            return names
+    return list(DEFAULT_NAMES)
+
+
+def build_name_token_stream(names: Sequence[str], tokenizer: CharTokenizer) -> np.ndarray:
+    """Flatten `[BOS] name [BOS]` documents into one token stream."""
+
+    ids: list[int] = []
+    for name in names:
+        ids.extend(tokenizer.encode(name.lower(), wrap_bos=True))
+    return np.asarray(ids, dtype=np.int64)
 
 
 class AdamW:
@@ -99,6 +150,7 @@ def generate(
     max_new_tokens: int,
     temperature: float = 1.0,
     top_k: int | None = None,
+    stop_token_id: int | None = None,
     rng: np.random.Generator | None = None,
 ) -> np.ndarray:
     rng = rng or np.random.default_rng()
@@ -118,11 +170,39 @@ def generate(
         probs /= probs.sum(axis=-1, keepdims=True)
         next_ids = np.array([rng.choice(probs.shape[-1], p=row) for row in probs], dtype=np.int64)[:, None]
         out = np.concatenate([out, next_ids], axis=1)
+        if stop_token_id is not None and np.all(next_ids == stop_token_id):
+            break
     return out
 
 
+def generate_name(
+    model: MiniGPT,
+    tokenizer: CharTokenizer,
+    max_length: int = 16,
+    temperature: float = 0.8,
+    top_k: int | None = None,
+    rng: np.random.Generator | None = None,
+) -> str:
+    seed = np.array([[tokenizer.bos_id]], dtype=np.int64)
+    sample = generate(
+        model,
+        seed,
+        max_new_tokens=max_length,
+        temperature=temperature,
+        top_k=top_k,
+        stop_token_id=tokenizer.bos_id,
+        rng=rng,
+    )
+    ids = sample[0].tolist()[1:]
+    if ids and ids[-1] == tokenizer.bos_id:
+        ids = ids[:-1]
+    return tokenizer.decode(ids)
+
+
 def train(
-    text: str = DEFAULT_TEXT,
+    text: str | None = None,
+    names: Sequence[str] | None = None,
+    data_path: str | Path | None = None,
     max_steps: int = 20,
     batch_size: int = 4,
     block_size: int = 16,
@@ -132,8 +212,13 @@ def train(
     seed: int = 1337,
 ) -> tuple[MiniGPT, CharTokenizer]:
     rng = np.random.default_rng(seed)
-    tokenizer = CharTokenizer().fit(text)
-    ids = np.array(tokenizer.encode(text), dtype=np.int64)
+    if text is not None:
+        tokenizer = CharTokenizer().fit(text)
+        ids = np.array(tokenizer.encode(text), dtype=np.int64)
+    else:
+        names = list(names) if names is not None else load_names(data_path)
+        tokenizer = CharTokenizer().fit_names(names)
+        ids = build_name_token_stream(names, tokenizer)
     config = MiniGPTConfig(
         vocab_size=tokenizer.vocab_size,
         block_size=block_size,
@@ -161,10 +246,10 @@ def train(
 
 def main() -> None:
     model, tokenizer = train()
-    seed = np.array([tokenizer.encode("Mini")], dtype=np.int64)
-    sample = generate(model, seed, max_new_tokens=80, temperature=0.9, top_k=8, rng=np.random.default_rng(7))
-    print("\n--- sample ---")
-    print(tokenizer.decode(sample[0].tolist()))
+    rng = np.random.default_rng(7)
+    print("\n--- samples ---")
+    for i in range(8):
+        print(f"{i + 1:02d}: {generate_name(model, tokenizer, temperature=0.8, top_k=8, rng=rng)}")
 
 
 if __name__ == "__main__":

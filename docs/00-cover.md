@@ -1,26 +1,32 @@
-# 00 Cover
+# 00 Build a Mini-GPT from scratch
 
 ## Slide Goal
 
-Establish the theme in one sentence: build a Mini-GPT that generates English names, then use it to inspect Transformer mechanics.
+Open the talk with a simple title page and set the topic.
 
 ## Key Points
 
-- Title: Build a Mini-GPT from Scratch
-- Subtitle: Understanding Transformer architecture and mechanics.
+- Build a Mini-GPT from scratch
+- Understand Transformer architecture and how it works
 - Speaker: Molin
-- Team: Infra . ECP .CIS
+- Team: ECP CIS
 
 ## Speaker Notes
 
-Today we start from a tiny name generator rather than the product surface of ChatGPT. The model is small, but the path is complete: tokenizer, embedding, attention, MLP, loss, backpropagation, Adam, and sampling. Once this miniature version is clear, the core mechanics of Transformer models become much easier to inspect.
+Hello everyone. I am Molin from ECP CIS.
+
+Today we will talk about how to build a Mini-GPT from scratch.
+
+The goal is simple: use a small model to understand the Transformer architecture and how it works.
+
+Let's get started.
 
 ## Visual Idea
 
-Use the current dark blueprint style: title on the left, and Figure 1 from "Attention Is All You Need" on the right with attribution.
+A clean dark-blueprint cover with the title, subtitle, speaker, team, and a small Transformer flow diagram: tokens, a compact block stack, and next-token output.
 
 ## Code Anchor
 
-- `src/tokenizer.py`
-- `src/model.py`
-- `src/train.py`
+- src/tokenizer.py
+- src/model.py
+- src/train.py
