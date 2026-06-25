@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 38
+title: "Q&A / Thank You"
+section: "Recap and References"
+output: "38-slide-qanda-thank-you.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,20 +12,17 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Q&A / Thank You
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Q&A
+- Thank you
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Thank you. I am happy to take questions.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Very simple closing slide with large `Q&A` and `Thank you`, dark blueprint background, small ECP CIS tag.
 
 Code snippet intent:
 None.
@@ -89,4 +86,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 38-slide-qanda-thank-you.png

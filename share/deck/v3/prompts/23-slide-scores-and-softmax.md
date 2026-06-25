@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 23
+title: "Scores and Softmax"
+section: "Transformer Architecture"
+output: "23-slide-scores-and-softmax.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,21 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Scores and Softmax
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Score = Q dot K match strength
+- Softmax turns scores into weights
+- Weights mix the values
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+We compare queries with keys using a dot product. This gives attention scores, which mean match strength. We scale the scores, then softmax turns them into weights that add up to one. Those weights decide how much value information to mix.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Matrix multiplication view over the character context `d e n n`: `Q @ K.T`, scale, softmax, attention matrix. Add definition chips: "score = match strength" and "softmax = scores to weights".
 
 Code snippet intent:
-None.
+PyTorch teaching snippet: `scores = q @ k.transpose(-2, -1) / sqrt(d_k)`.
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 23-slide-scores-and-softmax.png

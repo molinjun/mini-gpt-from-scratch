@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 33
+title: "Sampling Loop"
+section: "Training and Inference"
+output: "33-slide-sampling-loop.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,24 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Sampling Loop
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Use the latest context window
+- Convert logits to probabilities
+- Sample the next token
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+At each step, the model only needs the latest context window. It produces logits for the next token. We turn logits into probabilities and sample one token.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Loop diagram: context, model, logits, probabilities, sampled token, append.
 
 Code snippet intent:
-None.
+PyTorch teaching snippet:
+`logits = model(context)[:, -1, :]`
+`probs = torch.softmax(logits / temperature, dim=-1)`
+`next_id = torch.multinomial(probs, 1)`
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +90,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 33-slide-sampling-loop.png

@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 28
+title: "Linear Head to Logits"
+section: "Transformer Architecture"
+output: "28-slide-linear-head-to-logits.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,21 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Linear Head to Logits
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Logits are raw vocab scores
+- Softmax gives probabilities
+- Sampling picks the next token
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+At the end, a linear head maps the hidden vector back to vocabulary size. The output numbers are logits, which are raw scores before softmax. Softmax turns logits into probabilities, and sampling picks the next token.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Hidden vector for the last `n` entering the linear head, raw logit bars for character tokens `a`, `e`, `i`, `n`, `s`, then softmax probability bars. Highlight `i` as the likely next token. Add definition chips: "logits = raw scores" and "softmax = scores to probabilities".
 
 Code snippet intent:
-None.
+PyTorch teaching snippet: `logits = self.lm_head(x)`.
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 28-slide-linear-head-to-logits.png

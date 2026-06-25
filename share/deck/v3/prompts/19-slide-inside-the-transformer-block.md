@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 19
+title: "Inside the Transformer Block"
+section: "Transformer Architecture"
+output: "19-slide-inside-the-transformer-block.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,20 +12,18 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Inside the Transformer Block
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Attention mixes information across positions
+- MLP refines each position
+- Residual paths keep information flowing
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Now we enter the Transformer block. The block has two main jobs. Attention lets tokens look at other tokens. The MLP refines each position. Residual connections keep the signal moving.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Section divider with one Transformer block exploded into Attention, MLP, Norm, and Residual paths. Show the running character context `d e n n` entering the block and a likely next token `i` after the block path.
 
 Code snippet intent:
 None.
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 19-slide-inside-the-transformer-block.png

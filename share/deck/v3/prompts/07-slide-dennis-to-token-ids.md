@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 07
+title: "Dennis to Token IDs"
+section: "Tokenizer and Embedding"
+output: "07-slide-dennis-to-token-ids.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,20 +12,18 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Dennis to Token IDs
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Build a small vocabulary
+- Map each character to an ID
+- Encode and decode text
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+For our character tokenizer, each token has a stable ID in the small vocabulary. `Dennis` becomes `d e n n i s`, then `[4, 5, 14, 14, 9, 19]`. Encoding maps text to IDs, and decoding maps IDs back to text.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+`Dennis` split into character tokens `d e n n i s`, each connected to a small ID card: `d=4`, `e=5`, `n=14`, `i=9`, `s=19`. Add compact labels: `vocab_size = 27`, `token IDs: 0..26`, `encode = text to IDs`, and `decode = IDs to text`.
 
 Code snippet intent:
 None.
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 07-slide-dennis-to-token-ids.png

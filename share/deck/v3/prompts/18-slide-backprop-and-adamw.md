@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 18
+title: "Backprop and AdamW"
+section: "Neural Network Basics"
+output: "18-slide-backprop-and-adamw.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,21 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Backprop and AdamW
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Backprop computes gradients
+- Gradient = direction to reduce loss
+- AdamW updates weights
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Backprop tells each parameter how it affected the loss. A gradient is the direction that helps reduce the loss. AdamW uses gradients to update the weights. In the line example, this means `W` and `b` move a little each step until the line fits better. A Transformer trains many matrices in the same loop.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Circular training loop around the line plot: forward prediction, loss gap, backward gradients on `W` and `b`, AdamW update, improved line. Add definition chips: "gradient = direction to reduce loss" and "same loop for Transformer matrices".
 
 Code snippet intent:
-None.
+PyTorch teaching snippet: `optimizer.zero_grad()`, `loss.backward()`, `optimizer.step()`.
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 18-slide-backprop-and-adamw.png

@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 35
+title: "Recap: Dennis Through Mini-GPT"
+section: "Recap and References"
+output: "35-slide-recap-dennis-through-mini-gpt.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,20 +12,18 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Recap: Dennis Through Mini-GPT
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Text -> tokens -> vectors
+- Blocks -> logits -> probabilities
+- Sample -> append -> repeat
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Let us follow `Denn` through the full Mini-GPT flow. The text becomes token IDs. IDs become vectors. Transformer blocks process the hidden stream. The head gives logits. Softmax gives probabilities. We sample `i`, append it, and continue.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Long pipeline from `Denn` to `Dennis`: character tokenizer with small IDs, embedding, position, attention, MLP, logits, softmax, sample. Show character-level tokens such as `d e n n` and small IDs such as `[4, 5, 14, 14]`. Add definition chips: "logits = raw scores" and "softmax = probabilities".
 
 Code snippet intent:
 None.
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 35-slide-recap-dennis-through-mini-gpt.png

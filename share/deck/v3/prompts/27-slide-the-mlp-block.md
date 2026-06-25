@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 27
+title: "The MLP Block"
+section: "Transformer Architecture"
+output: "27-slide-the-mlp-block.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,21 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+The MLP Block
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Attention mixes across tokens
+- MLP works inside each token
+- Linear -> ReLU -> Linear
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Attention shares information across positions. The MLP then processes each position separately. In this teaching project, the MLP is Linear, ReLU, and Linear.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Per-position MLP pipeline repeated under character token columns `d`, `e`, `n`, `n`. Show that the MLP does not mix positions; attention already did that.
 
 Code snippet intent:
-None.
+PyTorch teaching snippet: `nn.Sequential(nn.Linear(n, 4*n), nn.ReLU(), nn.Linear(4*n, n))`.
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 27-slide-the-mlp-block.png

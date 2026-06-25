@@ -1,8 +1,8 @@
 ---
-slide: 02
-title: "Agenda"
-section: "Opening"
-output: "02-slide-agenda.png"
+slide: 22
+title: "Q, K, V Roles"
+section: "Transformer Architecture"
+output: "22-slide-q-k-v-roles.png"
 references:
   - ref_id: 01
     filename: "../refs/01-ref-blueprint.png"
@@ -12,23 +12,21 @@ references:
 Create one complete 16:9 presentation slide image.
 
 Slide title to render:
-Agenda
+Q, K, V Roles
 
 Slide-visible text to render:
-- Session 1: Why We Build Mini-GPT
-- Session 2: Tokenizer and Embedding
-- Session 3: Neural Network Basics
-- Session 4: Transformer Architecture
-- Session 5: Training and Inference
+- Query asks what this token needs
+- Key describes each context token
+- Value carries information to mix
 
 Speaker-note intent, for context only:
-Here is the map for the talk. We will move through five sessions. First, we explain why we build Mini-GPT and how it is inspired by MicroGPT. Second, we turn text into token IDs and vectors. Third, we cover the neural network basics we need for training. Fourth, we study the Transformer architecture. Fifth, we train the model and use it for inference.
+Q, K, and V are three learned projections of the same hidden vector. In our Mini-GPT, the tokens are characters. For the context `d e n n`, the last `n` makes a Query. The Keys describe `d`, `e`, `n`, and `n`. The Values carry the information that will be mixed before predicting `i`.
 
 Visual direction:
-Blueprint roadmap with five large session columns: Why We Build Mini-GPT, Tokenizer and Embedding, Neural Network Basics, Transformer, Training and Inference. The tokenizer panel should show `Dennis` character token boxes, not arbitrary numeric token IDs.
+Three-panel diagram using the exact character tokens `d e n n`. Highlight the current token, the last `n`. Show Query from that `n` matching Keys from `d`, `e`, `n`, and `n`, then Values carrying information into a mixed vector for next-token prediction. Add definition chips: "Q/K/V = learned projections" and "tokens are characters here".
 
 Code snippet intent:
-None.
+PyTorch teaching snippet: `q, k, v = self.q(x), self.k(x), self.v(x)`.
 
 Approved deck generation rules:
 # Mini-GPT Deck Generation Rules
@@ -89,4 +87,4 @@ Rendering instructions:
 - Keep text readable at presentation size.
 - Do not include slide numbers, logos, watermarks, or Chinese text.
 - Do not add unrelated examples, random tokens, or generic filler words.
-- Target output filename for the production batch: 02-slide-agenda.png
+- Target output filename for the production batch: 22-slide-q-k-v-roles.png
