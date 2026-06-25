@@ -57,7 +57,7 @@ Slides:
 Review focus:
 - Mini-GPT token IDs are small: `vocab_size = 27`, `0..26`.
 - `Dennis` examples use character-level tokens.
-- `I love CIS` is used for tokenizer/order examples where helpful.
+- Team context can mention `ECP CIS`, but model examples should stay on `Dennis`.
 - Embedding is explained as a learned lookup table.
 
 ## Batch 4: Transformer Architecture
@@ -77,7 +77,7 @@ Slides:
 - 32 Linear Head to Logits
 
 Review focus:
-- QKV uses `I love CIS`.
+- QKV uses character tokens from `Dennis`, especially `d e n n -> i`.
 - New terms have short definition chips.
 - `logits = raw scores` and `softmax = scores to probabilities` are visible where needed.
 - Architecture diagrams are readable and not overloaded.
