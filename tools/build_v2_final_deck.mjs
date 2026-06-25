@@ -1,12 +1,12 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { basename, extname, join } from "path";
-import PptxGenJS from "pptxgenjs";
 
 const root = process.cwd();
 const v2Dir = join(root, "share", "deck", "v2");
 const formalDeckDir = join(root, "share", "deck");
 const formalSlidesDir = join(root, "share", "slides");
 const docsDir = join(root, "docs");
+let pptxGenJSModule;
 
 const slides = [
   {
@@ -634,6 +634,7 @@ ${renderedSlides}
       <div class="controls">
         <button type="button" data-action="prev">Prev</button>
         <button type="button" data-action="next">Next</button>
+        <button type="button" data-action="presenter">Presenter</button>
         <button type="button" data-action="notes">Notes</button>
       </div>
     </footer>
@@ -652,6 +653,7 @@ ${renderedSlides}
     const notesTitle = document.querySelector("#notesTitle");
     const notesBody = document.querySelector("#notesBody");
     let current = 0;
+    let presenterWindow = null;
 
     function show(index) {
       current = Math.max(0, Math.min(slides.length - 1, index));
@@ -661,6 +663,121 @@ ${renderedSlides}
       title.textContent = active.dataset.title;
       notesTitle.textContent = active.dataset.title;
       notesBody.textContent = active.dataset.notes;
+      updatePresenter();
+    }
+
+    function openPresenter() {
+      presenterWindow = window.open("", "miniGptPresenter", "width=1120,height=760");
+      if (!presenterWindow) return;
+
+      const doc = presenterWindow.document;
+      doc.documentElement.lang = "en";
+      doc.title = "Presenter - Build a Mini-GPT from Scratch";
+
+      const metaCharset = doc.createElement("meta");
+      metaCharset.setAttribute("charset", "utf-8");
+      const metaViewport = doc.createElement("meta");
+      metaViewport.setAttribute("name", "viewport");
+      metaViewport.setAttribute("content", "width=device-width, initial-scale=1");
+      const titleEl = doc.createElement("title");
+      titleEl.textContent = "Presenter - Build a Mini-GPT from Scratch";
+      const style = doc.createElement("style");
+      style.textContent = [
+        ":root {",
+        "  color-scheme: dark;",
+        "  --bg: #030a16;",
+        "  --panel: #07182e;",
+        "  --text: #f5f9ff;",
+        "  --muted: #9cb7cf;",
+        "  --accent: #55d7ff;",
+        "}",
+        "* { box-sizing: border-box; }",
+        "body {",
+        "  margin: 0;",
+        "  min-height: 100vh;",
+        "  display: grid;",
+        "  grid-template-columns: minmax(0, 1.8fr) minmax(320px, 0.8fr);",
+        "  gap: 18px;",
+        "  padding: 18px;",
+        "  background: radial-gradient(circle at top, #0a2443 0, var(--bg) 52%);",
+        "  color: var(--text);",
+        "  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;",
+        "}",
+        ".preview {",
+        "  align-self: center;",
+        "  border: 1px solid rgba(85, 215, 255, 0.28);",
+        "  background: var(--panel);",
+        "  aspect-ratio: 16 / 9;",
+        "  overflow: hidden;",
+        "  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);",
+        "}",
+        ".preview img {",
+        "  display: block;",
+        "  width: 100%;",
+        "  height: 100%;",
+        "  object-fit: contain;",
+        "}",
+        ".notes {",
+        "  border: 1px solid rgba(85, 215, 255, 0.34);",
+        "  border-radius: 8px;",
+        "  background: rgba(7, 24, 46, 0.86);",
+        "  padding: 18px;",
+        "  overflow: auto;",
+        "}",
+        ".notes .count {",
+        "  margin: 0 0 12px;",
+        "  color: var(--muted);",
+        "  font-size: 14px;",
+        "}",
+        ".notes h1 {",
+        "  margin: 0 0 14px;",
+        "  color: var(--accent);",
+        "  font-size: 22px;",
+        "  line-height: 1.2;",
+        "}",
+        ".notes p {",
+        "  margin: 0;",
+        "  font-size: 19px;",
+        "  line-height: 1.55;",
+        "}",
+        "@media (max-width: 860px) {",
+        "  body { grid-template-columns: 1fr; }",
+        "}",
+      ].join("\\n");
+      doc.head.replaceChildren(metaCharset, metaViewport, titleEl, style);
+
+      const preview = doc.createElement("main");
+      preview.className = "preview";
+      const notes = doc.createElement("aside");
+      notes.className = "notes";
+      const count = doc.createElement("div");
+      count.className = "count";
+      const heading = doc.createElement("h1");
+      const body = doc.createElement("p");
+      notes.append(count, heading, body);
+      doc.body.replaceChildren(preview, notes);
+
+      updatePresenter();
+      presenterWindow.focus();
+    }
+
+    function updatePresenter() {
+      if (!presenterWindow || presenterWindow.closed) return;
+      const active = slides[current];
+      const sourceImg = active.querySelector("img");
+      const preview = presenterWindow.document.querySelector(".preview");
+      const count = presenterWindow.document.querySelector(".count");
+      const heading = presenterWindow.document.querySelector(".notes h1");
+      const body = presenterWindow.document.querySelector(".notes p");
+      if (!sourceImg || !preview || !count || !heading || !body) return;
+
+      const img = sourceImg.cloneNode(false);
+      img.src = sourceImg.src;
+      img.alt = sourceImg.alt;
+      preview.replaceChildren(img);
+      count.textContent = \`\${current + 1} / \${slides.length}\`;
+      heading.textContent = active.dataset.title;
+      body.textContent = active.dataset.notes;
     }
 
     document.addEventListener("click", (event) => {
@@ -668,6 +785,7 @@ ${renderedSlides}
       if (!button) return;
       if (button.dataset.action === "prev") show(current - 1);
       if (button.dataset.action === "next") show(current + 1);
+      if (button.dataset.action === "presenter") openPresenter();
       if (button.dataset.action === "notes") notesPanel.classList.toggle("open");
     });
 
@@ -693,6 +811,10 @@ ${renderedSlides}
         event.preventDefault();
         notesPanel.classList.toggle("open");
       }
+      if (event.key.toLowerCase() === "p") {
+        event.preventDefault();
+        openPresenter();
+      }
     });
   </script>
 </body>
@@ -701,6 +823,15 @@ ${renderedSlides}
 }
 
 async function createPptx(outputPath) {
+  const PptxGenJS = await getPptxGenJS();
+  if (!PptxGenJS) {
+    if (existsSync(outputPath)) {
+      console.warn(`Skipped PPTX export because pptxgenjs is not installed: ${outputPath}`);
+      return;
+    }
+    throw new Error(`Cannot create PPTX without pptxgenjs: ${outputPath}`);
+  }
+
   const pptx = new PptxGenJS();
   pptx.layout = "LAYOUT_16x9";
   pptx.author = "Zhiqiang Ge";
@@ -730,6 +861,16 @@ async function createPptx(outputPath) {
   console.log(`Created PPTX: ${outputPath}`);
 }
 
+async function getPptxGenJS() {
+  if (pptxGenJSModule !== undefined) return pptxGenJSModule;
+  try {
+    pptxGenJSModule = (await import("pptxgenjs")).default;
+  } catch {
+    pptxGenJSModule = null;
+  }
+  return pptxGenJSModule;
+}
+
 async function main() {
   assertAssets();
   mkdirSync(v2Dir, { recursive: true });
@@ -741,9 +882,14 @@ async function main() {
   const formalHtmlPath = join(formalSlidesDir, "index.html");
   const v2PptxPath = join(v2Dir, "build-mini-gpt-from-scratch-v2.pptx");
   const formalPptxPath = join(formalDeckDir, "build-mini-gpt-from-scratch.pptx");
+  const canExportPptx = Boolean(await getPptxGenJS());
 
   backupIfExists(formalHtmlPath);
-  backupIfExists(formalPptxPath);
+  if (canExportPptx) {
+    backupIfExists(formalPptxPath);
+  } else {
+    console.warn("PPTX export disabled because pptxgenjs is not installed; existing PPTX files will be preserved.");
+  }
 
   rebuildDocs();
   writeFileSync(notesPath, renderNotesMarkdown());

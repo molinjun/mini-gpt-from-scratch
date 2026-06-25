@@ -18,13 +18,13 @@ Here is the plan for the talk. I will divide it into five parts: why we try to b
 
 Section: Why We Build Mini-GPT
 
-The Transformer is one of the main architectures behind modern AI models. The key paper is Attention Is All You Need. For a GPT-style model, the core task is simple to say: read the context, then predict the next token. Everything in this talk is a path toward understanding that one idea.
+Before we build our Mini-GPT, let's set the big picture. GPT-style models look very powerful, but the core task is simple: given a sequence of tokens, predict the next token. The architecture behind this comes from the Transformer paper, Attention Is All You Need. The paper link is https://arxiv.org/abs/1706.03762. The original architecture diagram is important, but it is also complex: encoder, decoder, attention, feed-forward layers, residual connections, and normalization. So instead of trying to understand everything at once, we will use a smaller path.
 
 ## 04. From MicroGPT to Our Mini-GPT
 
 Section: Why We Build Mini-GPT
 
-A full Transformer can feel too large to learn at once. So we borrow the spirit of Andrej Karpathy's MicroGPT and build a tiny GPT for name generation. The task is small, but it still includes the full path: tokenizer, embeddings, Transformer blocks, logits, loss, and sampling.
+This is where MicroGPT gives us a good learning idea. Instead of starting with a huge model, we build a tiny GPT-style model that generates names. The task is small, but the structure is still real: text becomes tokens, tokens become vectors, the Transformer block processes the context, and the model predicts the next token. So name generation is not the final goal. It is a simple example that lets us see how the Transformer works step by step.
 
 ## 05. Neural Network Basics
 
