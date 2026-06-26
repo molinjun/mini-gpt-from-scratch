@@ -10,6 +10,18 @@ Finish the V3 talk outline and English speaker notes for the technical presentat
 
 The talk is tomorrow at 6 PM. The priority is speed and clarity: finish the story and notes first, then generate final deck outputs once at the end.
 
+Latest state update:
+
+- V3 is now a 37-slide logical deck in `speaker-notes.md` and `outline.md`.
+- `The Hidden Stream` is no longer an independent talk slide.
+- The hidden-stream idea is folded into the architecture overview and Transformer block explanation.
+- `Decoder-Only Map` is moved logically right after `Position Embedding` as the whole-model map.
+- Image and prompt files have now been physically reordered to match the 37-slide structure.
+- Active V3 root images are now `01-slide-...png` through `37-slide-...png`.
+- Active V3 prompts are now `prompts/01-slide-...md` through `prompts/37-slide-...md`.
+- The previous 38-slide V3 image/prompt sequence is preserved under `share/deck/v3/backup-before-37-slide-reorder-20260626-003051/`.
+- Image selection should now happen through `share/deck/v3/selected-images/`, grouped by talk module. The user will copy preferred v1/v2/v3 candidates there before final assembly.
+
 ## Current Constraints
 
 - Do not edit PPTX, PDF, or `index.html` during the notes/outlining pass.
@@ -59,8 +71,8 @@ The current Agenda image still shows the older order, but do not regenerate it n
 - Created `share/deck/v3/` from `share/deck/v2/`.
 - Preserved V2; do not overwrite or delete V2.
 - V3 currently has:
-  - 42 PNG files
-  - 42 prompt files
+  - 37 active PNG files
+  - 37 active prompt files
   - `speaker-notes.md`
   - copied `index.html`, PPTX, and PDF from V2, but these should not be edited now
 - Cover image was minimally patched from V2:
@@ -86,13 +98,15 @@ Current Slide 02:
 
 ## Next Step
 
-Continue from Slide 03, then Slide 04.
+Continue refining from the Transformer Architecture section after Slide 19.
 
-Suggested direction:
+Current logical sequence around the redesign:
 
-- Slide 03 should introduce Transformer as the architecture and connect it to **Attention Is All You Need**.
-- Do not over-explain yet; use this slide to establish why Transformer matters and why GPT is next-token prediction.
-- Slide 04 should introduce MicroGPT/Mini-GPT as the simplification strategy: small name generator, same core GPT path.
+- Slide 10: Position Embedding
+- Slide 11: Decoder-Only Map, whole Mini-GPT architecture overview
+- Slides 12-18: Neural Network Basics
+- Slide 19: Inside the Transformer Block
+- Slides 20 onward: Attention, Q/K/V, softmax, mask, multi-head, RMSNorm/residuals, MLP, logits
 
 Keep each speaker note short, natural, and read-aloud friendly. The user prefers simple but not childish English. Avoid stiff "First, second, third" scripts unless the slide is explicitly an agenda.
 

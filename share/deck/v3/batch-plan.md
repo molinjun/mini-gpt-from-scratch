@@ -18,9 +18,9 @@ Review focus:
 - The Transformer paper architecture is clear but not too detailed.
 - The MicroGPT slide clearly explains the name-generator task.
 
-## Batch 2: Tokenizer and Embedding
+## Batch 2: Tokenizer, Embedding, and Architecture Overview
 
-Status: Generated in `share/deck/v3/`; reordered before neural network basics.
+Status: Generated in `share/deck/v3/`; reordered before neural network basics. Hidden Stream is folded into the architecture overview.
 
 Slides:
 - 05 Why We Need a Tokenizer
@@ -29,13 +29,14 @@ Slides:
 - 08 From Token IDs to Vectors
 - 09 Token Embedding
 - 10 Position Embedding
-- 11 The Hidden Stream
+- 11 Decoder-Only Map
 
 Review focus:
 - Mini-GPT token IDs are small: `vocab_size = 27`, `0..26`.
 - `Dennis` examples use character-level tokens.
 - Team context can mention `ECP CIS`, but model examples should stay on `Dennis`.
 - Embedding is explained as a learned lookup table.
+- Decoder-only map shows the whole path before block internals.
 
 ## Batch 3: Neural Network Basics
 
@@ -62,15 +63,14 @@ Status: Generated in `share/deck/v3/`.
 
 Slides:
 - 19 Inside the Transformer Block
-- 20 Decoder-Only Map
-- 21 Attention Intuition
-- 22 Q, K, V Roles
-- 23 Scores and Softmax
-- 24 Causal Mask
-- 25 Multi-Head Attention
-- 26 RMSNorm and Residuals
-- 27 The MLP Block
-- 28 Linear Head to Logits
+- 20 Attention Intuition
+- 21 Q, K, V Roles
+- 22 Scores and Softmax
+- 23 Causal Mask
+- 24 Multi-Head Attention
+- 25 RMSNorm and Residuals
+- 26 The MLP Block
+- 27 Linear Head to Logits
 
 Review focus:
 - QKV uses character tokens from `Dennis`, especially `d e n n -> i`.
@@ -83,16 +83,16 @@ Review focus:
 Status: Generated in `share/deck/v3/`.
 
 Slides:
-- 29 Training Mini-GPT
-- 30 Training Loop: PyTorch View
-- 31 Loss Goes Down
-- 32 Generating Names
-- 33 Sampling Loop
-- 34 Temperature Controls Creativity
-- 35 Recap: Dennis Through Mini-GPT
-- 36 What to Inspect in Code
-- 37 References
-- 38 Q&A / Thank You
+- 28 Training Mini-GPT
+- 29 Training Loop: PyTorch View
+- 30 Loss Goes Down
+- 31 Generating Names
+- 32 Sampling Loop
+- 33 Temperature Controls Creativity
+- 34 Recap: Dennis Through Mini-GPT
+- 35 What to Inspect in Code
+- 36 References
+- 37 Q&A / Thank You
 
 Review focus:
 - Training loop code is readable.
@@ -102,7 +102,8 @@ Review focus:
 
 ## Promotion Checklist
 
-- V3 preview complete: `share/deck/v3/index.html` contains 38 slides.
+- V3 active source complete: `speaker-notes.md`, `outline.md`, PNGs, and prompts contain 37 slides.
+- V3 preview/export HTML, PPTX, and PDF should be regenerated once after notes and image order are final.
 - V3 exports complete: `share/deck/v3/build-mini-gpt-from-scratch-v3.pptx` and `share/deck/v3/build-mini-gpt-from-scratch-v3.pdf`.
 - Formal promotion status: promoted to `share/slides/index.html` and `share/deck/build-mini-gpt-from-scratch.pptx`.
 - Speaker notes source: `share/deck/v3/speaker-notes.md` and matching talk-ordered docs.
