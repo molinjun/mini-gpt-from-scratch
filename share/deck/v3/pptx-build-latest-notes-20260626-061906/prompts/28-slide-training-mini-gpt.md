@@ -1,0 +1,1 @@
+Now that we have the full forward path, training is easier to describe. We take name text and turn it into many shifted next-token examples. Given `d e n n`, the target might be `i`. Given `e n n i`, the target might be `s`. Mini-GPT predicts logits, cross entropy measures the mistake, and the optimizer updates the weights.

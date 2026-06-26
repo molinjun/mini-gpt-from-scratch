@@ -1,0 +1,1 @@
+In real GPT systems, tokenizers often use word pieces or subword pieces. Tools like tiktoken can show that process. For Mini-GPT, our data is only names, so we keep it much simpler. We use 26 letters plus one BOS token. That gives us a vocabulary size of 27.

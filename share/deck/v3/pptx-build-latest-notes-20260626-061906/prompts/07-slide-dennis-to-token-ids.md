@@ -1,0 +1,1 @@
+Now let's make the tokenizer concrete. We build a small vocabulary and map each character to an ID. For example, Dennis becomes d, e, n, n, i, s, and then 4, 5, 14, 14, 9, 19. Encoding means text to IDs. Decoding means IDs back to text.

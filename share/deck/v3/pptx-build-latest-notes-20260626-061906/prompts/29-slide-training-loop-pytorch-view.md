@@ -1,0 +1,1 @@
+In code, the loop is small. Get a batch. Run the model forward to produce logits. Compare logits with target tokens using cross entropy. Run backward to compute gradients. Then let AdamW update the parameters. The embeddings, attention weights, MLP weights, and linear head all learn through this same loop.

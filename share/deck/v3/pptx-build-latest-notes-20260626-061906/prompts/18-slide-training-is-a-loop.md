@@ -1,0 +1,1 @@
+For Mini-GPT, this becomes a next-token training loop. The model predicts the next token. Cross entropy measures the mistake. Backpropagation computes gradients. AdamW updates the parameters. We repeat this over many batches, so the loss goes down and the generated names start to look more real.

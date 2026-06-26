@@ -1,0 +1,1 @@
+One neuron gives us one small feature. An MLP stacks many neurons and layers. This lets the model combine simple features into richer ones. In Mini-GPT, the MLP is still simple: Linear, ReLU, then Linear. The same idea appears inside every Transformer block.

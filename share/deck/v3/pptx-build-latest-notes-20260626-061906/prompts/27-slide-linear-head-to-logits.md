@@ -1,0 +1,1 @@
+At the end, the linear head maps the hidden vector to vocabulary logits. Logits are raw scores for possible next tokens. Here we use a second softmax. Earlier, softmax turned attention scores into attention weights. Now, softmax turns vocabulary logits into next-token probabilities. Then we sample the next token.

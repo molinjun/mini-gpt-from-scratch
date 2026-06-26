@@ -1,0 +1,1 @@
+Temperature changes how sharp the probabilities are before sampling. Low temperature makes the model safer and more predictable. Higher temperature spreads probability across more choices. The output becomes more varied, but also more risky. For name generation, temperature is a simple creativity control.

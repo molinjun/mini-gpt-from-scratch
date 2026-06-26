@@ -1,0 +1,1 @@
+Hello everyone. Thank you for joining. Today's topic is Build a Mini-GPT from Scratch. We will try to build a GPT-style name generator, and use that  to understand the main ideas behind the Transformer architecture. All right, let's get started.

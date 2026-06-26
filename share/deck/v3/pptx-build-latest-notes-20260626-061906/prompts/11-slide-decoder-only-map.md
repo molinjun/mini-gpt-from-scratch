@@ -1,0 +1,1 @@
+Now that text has become vectors, let's zoom out and see the whole GPT path. Mini-GPT is decoder-only. It reads previous tokens and predicts the next token. The embeddings go into Transformer blocks. Then RMSNorm and the linear head turn the final vectors into logits over the vocabulary. This map connects the input steps to the block we will open next.

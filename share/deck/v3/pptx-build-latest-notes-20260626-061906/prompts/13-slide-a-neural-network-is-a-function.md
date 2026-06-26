@@ -1,0 +1,1 @@
+The first idea is simple: a neural network is a function with parameters. It takes numbers in and produces numbers out. At the start, the function is usually wrong. Training changes the parameters so the output fits the data better.

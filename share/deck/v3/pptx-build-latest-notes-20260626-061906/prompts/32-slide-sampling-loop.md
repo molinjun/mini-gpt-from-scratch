@@ -1,0 +1,1 @@
+At each generation step, we keep the latest context window and run Mini-GPT. The model returns logits for the next token. We turn those logits into probabilities with softmax. Then we sample one token, append it, and repeat. Training can predict many positions at once, but generation moves one step at a time.

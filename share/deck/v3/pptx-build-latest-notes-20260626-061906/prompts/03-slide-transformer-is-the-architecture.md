@@ -1,0 +1,1 @@
+Many modern AI models are based on the Transformer architecture. It was introduced in the paper Attention Is All You Need in 2017. GPT models can look complex, but the core task is simple: given some tokens, predict the next token. The original diagram has many parts, so today we will follow a smaller one.

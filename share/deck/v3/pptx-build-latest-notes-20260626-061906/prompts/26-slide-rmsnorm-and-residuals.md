@@ -1,0 +1,1 @@
+RMSNorm and residual connections help the repeated blocks stay stable. The pattern is simple: normalize the stream, compute an update, and add the old stream back. RMSNorm controls the scale. Residuals keep useful information as the model passes through many layers.

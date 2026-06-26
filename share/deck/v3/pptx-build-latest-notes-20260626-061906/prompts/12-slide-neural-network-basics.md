@@ -1,0 +1,1 @@
+Before we open the Transformer block, we need a short neural-network foundation. We do not need a full machine-learning course. We only need a few ideas. Parameters shape predictions. ReLU and MLPs make the model more flexible. Loss and gradients tell the model how to improve.

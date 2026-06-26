@@ -1,0 +1,1 @@
+Now we need a way to improve the parameters. The model runs forward and makes a prediction. The loss measures the gap between the prediction and the target. Backpropagation tells us how each parameter affected that loss. AdamW uses those gradients to move the parameters a small step in a better direction.

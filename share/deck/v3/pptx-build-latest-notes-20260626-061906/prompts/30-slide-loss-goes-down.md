@@ -1,0 +1,1 @@
+When loss goes down, the model is less surprised by real name patterns. At the beginning, generated names are mostly random letters. As training continues, the model gives more probability to normal character patterns. The samples start to look like names.

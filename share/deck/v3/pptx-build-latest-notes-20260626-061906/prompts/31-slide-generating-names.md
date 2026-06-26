@@ -1,0 +1,1 @@
+Generation runs left to right. We start with a seed token and ask the model to predict one next token. Then we append that token to the context and ask again. Each new character becomes part of the next input, so a name grows one token at a time.

@@ -1,0 +1,1 @@
+Now we start from the input string. A Transformer cannot read a word like Dennis directly. It needs numbers. A tokenizer does this first step. It splits text into tokens, then maps each token to an integer ID.

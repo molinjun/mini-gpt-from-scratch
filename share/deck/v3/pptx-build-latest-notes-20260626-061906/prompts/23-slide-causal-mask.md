@@ -1,0 +1,1 @@
+Before the attention weights are final, GPT must block the future. During training, the full sequence is available. But the model can only use the current token and past tokens. The causal mask makes training match left-to-right generation.

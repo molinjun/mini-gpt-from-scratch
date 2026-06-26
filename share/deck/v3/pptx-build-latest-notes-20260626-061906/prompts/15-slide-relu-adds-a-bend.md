@@ -1,0 +1,1 @@
+A straight line can only fit simple patterns. Real data is usually not that simple. ReLU adds a bend. Negative values become zero, and positive values pass through. With this small change, the model can build more useful shapes.

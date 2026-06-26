@@ -1,0 +1,1 @@
+A very small model is y equals W times x plus b. The weight W controls the slope. The bias b shifts the line. Both of them are learnable parameters. During training, the model learns values of W and b that make its predictions closer to the targets.
