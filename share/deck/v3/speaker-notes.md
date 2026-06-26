@@ -114,55 +114,55 @@ For Mini-GPT, the same idea becomes a next-token training loop. The model predic
 
 Section: Transformer Architecture
 
-Now we return to the Transformer block from the map. The input to the block is a vector at each token position. The block has two main jobs: attention lets positions use context from other positions, and the MLP refines each position's vector. RMSNorm and residual connections help the information keep flowing as the same block pattern repeats.
+Now we open one Transformer block. The block has two main parts: attention and MLP. Attention lets each position read useful information from earlier positions. The MLP then computes new features inside each position. Residual paths keep the hidden vectors flowing through the block.
 
 ## 20. Attention Intuition
 
 Section: Transformer Architecture
 
-Attention is a learned way for one position to look back at useful context. For the prefix d, e, n, n, the last n may need information from earlier characters to predict i. Attention scores the visible positions and mixes their value vectors.
+Attention is a learned lookup mechanism. For the last `n` in `Denn`, the model asks: which earlier characters matter for predicting the next one? It gives visible positions different weights, then mixes their value vectors into a new vector for this position.
 
 ## 21. Q, K, V Roles
 
 Section: Transformer Architecture
 
-For each hidden vector, the model creates three learned projections: query, key, and value. The query asks what the current position needs. The keys describe the context positions. The values carry the information that can be mixed. Q and K choose the weights; V is what gets combined.
+Q, K, and V are three learned projections from the same hidden vectors. Query means: what am I looking for? Key means: what does each context position contain? Value means: what information can this position send? Q and K decide the weights. V carries the information that gets mixed.
 
 ## 22. Scores and Softmax
 
 Section: Transformer Architecture
 
-The model compares queries and keys with a dot product. That gives attention scores, or match strengths. Softmax turns those scores into weights that add up to one. The attention output is a weighted mix of the value vectors.
+The model compares Q and K to get attention scores. A higher score means a stronger match. Then softmax turns those scores into attention weights that add up to one. This is the first softmax in the story: it is inside attention, and it decides how much each visible token contributes.
 
 ## 23. Causal Mask
 
 Section: Transformer Architecture
 
-During training, the full sequence is available, but GPT must not cheat by looking at future tokens. The causal mask blocks future positions. Each token can attend only to itself and earlier tokens, so the next-token prediction stays honest.
+Before the attention weights are finalized, GPT must block the future. During training, the full sequence is available, but the model is only allowed to use current and past positions. The causal mask makes training match left-to-right generation, so the prediction stays honest.
 
 ## 24. Multi-Head Attention
 
 Section: Transformer Architecture
 
-One attention head can learn one kind of relation. Multi-head attention runs several heads in parallel, so different heads can learn different views of the same context. Then the head outputs are joined together and projected back to the model dimension.
+One attention head gives one view of the context. Multi-head attention runs several heads in parallel. One head may focus on nearby spelling patterns, another may focus on endings or repeated characters. Then the head outputs are merged back into one hidden stream.
 
-## 25. RMSNorm and Residuals
-
-Section: Transformer Architecture
-
-Residual connections add the old signal back after a layer. This helps information and gradients flow through repeated blocks. RMSNorm keeps the vector scale stable. Together, they make the Transformer easier to train.
-
-## 26. The MLP Block
+## 25. The MLP Block
 
 Section: Transformer Architecture
 
-Attention mixes information across tokens. The MLP works inside each token position. In this teaching version, the MLP is Linear, ReLU, and Linear. So the block first shares context with attention, then computes new features at each position.
+After attention shares information across tokens, the MLP works inside each token position. This is the neural network idea from the previous section: Linear, ReLU, Linear. The same MLP weights are reused at every position, but each position has its own hidden vector.
+
+## 26. RMSNorm and Residuals
+
+Section: Transformer Architecture
+
+RMSNorm and residual connections make the repeated block stable. The pattern is: normalize the stream, compute an update, and add the old stream back. RMSNorm controls the scale, and residuals preserve information as the model passes through many layers.
 
 ## 27. Linear Head to Logits
 
 Section: Transformer Architecture
 
-At the end, the linear head maps each hidden vector to vocabulary size. The output numbers are logits, which means raw scores. Softmax turns logits into probabilities, and sampling chooses the next token. For Denn, we hope i becomes likely.
+At the end, the linear head maps the hidden vector to vocabulary logits. Logits are raw scores for possible next tokens. Here we use a second softmax: earlier, softmax turned attention scores into attention weights; now, softmax turns vocabulary logits into next-token probabilities. Then we sample the next token.
 
 ## 28. Training Mini-GPT
 
